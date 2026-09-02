@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import BidForm
@@ -6,7 +7,18 @@ from .models import Bid
 
 def monitor(request):
     show_current_bids = request.GET.get("has_bids") == "true"
+    priority = request.GET.get("priority")
+    q = request.GET.get("q", "").strip()
+
     bids = Bid.objects.select_related("developer").order_by("-date", "-id")
+
+    if q:
+        bids = bids.filter(
+            agency_name__icontains=q
+            ) | bids.filter(ecgains__icontains=q)
+
+    if priority:
+        bids = bids.filter(priority=priority)
 
     if show_current_bids:
         bids = bids.filter(has_bids=True)
@@ -17,6 +29,8 @@ def monitor(request):
         {
             "bids": bids,
             "show_current_bids": show_current_bids,
+            "query": q,
+            "selected_priority": priority,
         },
     )
 
@@ -27,8 +41,8 @@ def create_bid(request):
 
         if form.is_valid():
             bid = form.save()
+            messages.success(request, "Bid request created successfully.")
             return redirect("bid_detail", ecgains=bid.ecgains)
-
     else:
         form = BidForm()
 
@@ -62,8 +76,8 @@ def edit_bid(request, ecgains):
 
         if form.is_valid():
             form.save()
+            messages.success(request, "Bid request updated successfully.")
             return redirect("bid_detail", ecgains=bid.ecgains)
-
     else:
         form = BidForm(instance=bid)
 
@@ -83,6 +97,7 @@ def delete_bid(request, ecgains):
 
     if request.method == "POST":
         bid.delete()
+        messages.success(request, "Bid request deleted successfully.")
         return redirect("monitor")
 
     return render(

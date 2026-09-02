@@ -6,19 +6,57 @@
 
 <div class="container-fluid py-4">
 
-    <!-- Monitor Buttons -->
-    <div class="d-flex justify-content-center align-items-center gap-2 mb-3">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{% url 'monitor' %}"
+                       class="btn {% if not show_current_bids %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4">
+                        Monitoring
+                    </a>
 
-        <a href="{% url 'monitor' %}"
-           class="btn {% if not show_current_bids %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4">
-            Monitoring
-        </a>
+                    <a href="{% url 'monitor' %}?has_bids=true"
+                       class="btn {% if show_current_bids %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4">
+                        Has Current Bids
+                    </a>
+                </div>
 
-        <a href="{% url 'monitor' %}?has_bids=true"
-           class="btn {% if show_current_bids %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4">
-            Has Current Bids
-        </a>
+                <a href="{% url 'create_bid' %}" class="btn btn-success btn-sm px-4">
+                    + New Request
+                </a>
+            </div>
 
+            <form method="get" class="row g-2 align-items-end">
+                <div class="col-md-5">
+                    <label for="searchInput" class="form-label small fw-bold">Search</label>
+                    <input
+                        id="searchInput"
+                        type="text"
+                        name="q"
+                        value="{{ query|default_if_none:'' }}"
+                        class="form-control"
+                        placeholder="Agency or ECGAINS"
+                    >
+                </div>
+
+                <div class="col-md-3">
+                    <label for="priorityFilter" class="form-label small fw-bold">Priority</label>
+                    <select id="priorityFilter" name="priority" class="form-select">
+                        <option value="">All Priorities</option>
+                        <option value="High" {% if selected_priority == 'High' %}selected{% endif %}>High</option>
+                        <option value="Normal" {% if selected_priority == 'Normal' %}selected{% endif %}>Normal</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Apply</button>
+                </div>
+
+                <div class="col-md-2">
+                    <a href="{% url 'monitor' %}" class="btn btn-outline-secondary w-100">Reset</a>
+                </div>
+            </form>
+        </div>
     </div>
 
 
@@ -337,7 +375,7 @@
     .has-bid {
         color: #000000;
         font-weight: bold;
-        text-decoration: underline;
+        text-decoration: None;
         white-space: nowrap;
     }
 

@@ -1,9 +1,23 @@
 from django import forms
+from django.core.validators import RegexValidator
 
 from .models import Bid, Developer
 
 
 class BidForm(forms.ModelForm):
+    ecgains = forms.CharField(
+        validators=[
+            RegexValidator(
+                regex=r"^\d{2}-\d{2}-\d{3}-\d{4}-\d{6}$",
+                message="ECGAINS must be in the format 02-03-002-0001-000000.",
+            )
+        ],
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Enter ECGAINS",
+        }),
+    )
+
     class Meta:
         model = Bid
 
@@ -95,15 +109,33 @@ class BidForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Only show active developers
         self.fields["developer"].queryset = (
             Developer.objects
             .all()
             .order_by("name")
         )
 
-        # Add empty option to dropdowns
         self.fields["developer"].empty_label = "Select Developer"
         self.fields["bid_type"].empty_label = "Select Bid Type"
         self.fields["priority"].empty_label = "Select Priority"
         self.fields["procurement_type"].empty_label = "Select Procurement Type"
+
+    def clean_ecgains(self):
+        ecgains = self.cleaned_data.get("ecgains")
+        if not ecgains:
+            return ecgains
+
+        queryset = Bid.objects.filter(ecgains__iexact=ecgains)
+        if self.instance and self.instance.pk:
+            queryset = queryset.exclude(pk=self.instance.pk)
+
+        if queryset.exists():
+            raise forms.ValidationError("A bid with this ECGAINS already exists.")
+
+        return ecgains
+
+    def clean_bid_url(self):
+        bid_url = self.cleaned_data.get("bid_url")
+        if bid_url and not bid_url.startswith(("http://", "https://")):
+            raise forms.ValidationError("Bid URL must start with http:// or https://.")
+        return bid_url

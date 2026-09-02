@@ -62,7 +62,7 @@
                 <div class="legacy-cell-value wide">{{ bid.contact_email }}</div>
 
                 <div class="legacy-cell-label">Date:</div>
-                <div class="legacy-cell-value narrow">{{ bid.date }}</div>
+                <div class="legacy-cell-value narrow">{{ bid.date|date:"M j, Y" }}</div>
 
             </div>
 
@@ -128,6 +128,16 @@
 
                 <div class="legacy-cell-label">Procurement<br>Type:</div>
                 <div class="legacy-cell-value narrow">{{ bid.get_procurement_type_display }}</div>
+
+            </div>
+
+            <div class="legacy-row">
+
+                <div class="legacy-cell-label"></div>
+                <div class="legacy-cell-value wide"></div>
+
+                <div class="legacy-cell-label">Last<br>Updated:</div>
+                <div class="legacy-cell-value narrow">{{ bid.updated_at|date:"M j, Y" }}</div>
 
             </div>
 
@@ -239,7 +249,7 @@
     .legacy-yes {
         color: #0000ee;
         font-weight: bold;
-        text-decoration: underline;
+        text-decoration: None;
     }
 
     .legacy-no {
