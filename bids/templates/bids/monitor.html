@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block title %}Bid Repair Monitor{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <div>
+            <h2 class="mb-1">Bid Repair Monitor</h2>
+            <p class="text-muted mb-0">
+                Monitor and manage bid repair requests.
+            </p>
+        </div>
+
+        <a href="{% url 'create_bid' %}" class="btn btn-primary">
+            New Request
+        </a>
+
+    </div>
+
+
+    <!-- Monitor Buttons -->
+    <div class="d-flex justify-content-center align-items-center gap-2 mb-3">
+
+        <a href="{% url 'monitor' %}"
+           class="btn {% if not show_current_bids %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4">
+            Monitoring
+        </a>
+
+        <a href="{% url 'monitor' %}?has_bids=true"
+           class="btn {% if show_current_bids %}btn-primary{% else %}btn-outline-primary{% endif %} btn-sm px-4">
+            Has Current Bids
+        </a>
+
+    </div>
+
+
+    <!-- Monitor Table -->
+    <div class="table-responsive">
+
+        <table class="table table-sm table-bordered align-middle monitor-table">
+
+            <thead>
+                <tr>
+                    <th>ECGAINS</th>
+                    <th>Agency</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th class="text-center">Has Bid</th>
+                    <th class="text-center">URL</th>
+                    <th class="text-center">View / Update</th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+
+                {% if bids %}
+
+                    {% for bid in bids %}
+
+                    <tr
+                        {% if bid.priority == "high" %}
+                            class="high-priority"
+                        {% endif %}
+                    >
+
+                        <!-- ECGAINS -->
+                        <td>
+                            <a href="{% url 'bid_detail' bid.ecgains %}"
+                               class="ecgains-link">
+                                {{ bid.ecgains }}
+                            </a>
+                        </td>
+
+
+                        <!-- Agency -->
+                        <td>
+                            <strong>{{ bid.agency_name }}</strong>
+                        </td>
+
+
+                        <!-- Date -->
+                        <td>
+                            {{ bid.date|date:"m/d/Y" }}
+                        </td>
+
+
+                        <!-- Type -->
+                        <td>
+                            {{ bid.get_bid_type_display }}
+                        </td>
+
+
+                        <!-- Has Bid -->
+                        <td class="text-center">
+
+                            {% if bid.has_bids %}
+
+                                <span class="has-bid">
+                                    Yes
+                                </span>
+
+                            {% else %}
+
+                                <span class="no-bid">
+                                    No
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- URL -->
+                        <td class="text-center">
+
+                            {% if bid.bid_url %}
+
+                                <a href="{{ bid.bid_url }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="bid-url">
+                                    URL
+                                </a>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    —
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- View / Update -->
+                        <td class="text-center">
+
+                            <a href="{% url 'bid_detail' bid.ecgains %}"
+                               class="btn btn-primary btn-sm view-btn">
+                                VIEW / UPDATE
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <!-- No Requests -->
+                    <tr>
+
+                        <td colspan="7" class="text-center py-5">
+
+                            <h5 class="mb-2">
+                                No bid repair requests found.
+                            </h5>
+
+                            <p class="text-muted mb-3">
+                                There are currently no requests in the monitor.
+                            </p>
+
+                            <a href="{% url 'create_bid' %}"
+                               class="btn btn-primary">
+                                Create First Request
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% endif %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    /* Main monitor table */
+    .monitor-table {
+        width: 95%;
+        margin: 0 auto;
+        background-color: #ffffff;
+        font-size: 14px;
+    }
+
+
+    /* Table header */
+    .monitor-table thead th {
+        background-color: #808080;
+        color: #ffffff;
+        font-weight: bold;
+        border-color: #777777;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+
+    /* Table cells */
+    .monitor-table tbody td {
+        padding: 5px 7px;
+        border-color: #777777;
+        vertical-align: middle;
+    }
+
+
+    /* Row hover */
+    .monitor-table tbody tr:hover {
+        background-color: #ffff00 !important;
+    }
+
+
+    /* ECGAINS link */
+    .ecgains-link {
+        color: #0000ee;
+        font-weight: bold;
+        text-decoration: underline;
+        white-space: nowrap;
+    }
+
+
+    /* Bid URL */
+    .bid-url {
+        color: #0000ee;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+
+    /* Has Bid */
+    .has-bid {
+        color: #0000ee;
+        font-weight: bold;
+        text-decoration: underline;
+        white-space: nowrap;
+    }
+
+
+    /* No Bid */
+    .no-bid {
+        color: #555555;
+    }
+
+
+    /* View / Update button */
+    .view-btn {
+        font-size: 11px;
+        font-weight: bold;
+        padding: 3px 8px;
+        white-space: nowrap;
+    }
+
+
+    /* High priority */
+    .high-priority {
+        background-color: #ff2424;
+    }
+
+
+    /* Keep links readable on high priority rows */
+    .high-priority .ecgains-link,
+    .high-priority .bid-url,
+    .high-priority .has-bid {
+        color: #0000ee;
+    }
+
+</style>
+
+{% endblock %}

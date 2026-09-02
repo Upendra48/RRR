@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Bid Details - {{ bid.agency_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">Bid Details</h2>
+            <p class="text-muted mb-0">
+                {{ bid.agency_name }} — {{ bid.ecgains }}
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="{% url 'monitor' %}" class="btn btn-outline-secondary">
+                Back to Monitor
+            </a>
+
+            <a href="{% url 'edit_bid' bid.ecgains %}" class="btn btn-primary">
+                Edit / Update
+            </a>
+
+            <a href="{% url 'delete_bid' bid.ecgains %}" class="btn btn-danger">
+                Delete
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0">Request Information</h5>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <label class="detail-label">Agency</label>
+                    <div class="detail-value">
+                        {{ bid.agency_name }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="detail-label">State</label>
+                    <div class="detail-value">
+                        {{ bid.state }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="detail-label">ECGAINS</label>
+                    <div class="detail-value">
+                        {{ bid.ecgains }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="detail-label">Initials</label>
+                    <div class="detail-value">
+                        {{ bid.initials }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="detail-label">Contact Email</label>
+                    <div class="detail-value">
+                        {{ bid.contact_email }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="detail-label">Date</label>
+                    <div class="detail-value">
+                        {{ bid.date }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="detail-label">Bid Type</label>
+                    <div class="detail-value">
+                        {{ bid.get_bid_type_display }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="detail-label">Priority</label>
+                    <div class="detail-value">
+                        {{ bid.get_priority_display }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="detail-label">Has Bid</label>
+                    <div class="detail-value">
+                        {{ bid.has_bids }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="detail-label">Developer</label>
+                    <div class="detail-value">
+                        {{ bid.developer }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="detail-label">Procurement Type</label>
+                    <div class="detail-value">
+                        {{ bid.get_procurement_type_display }}
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="detail-label">Module Name</label>
+                    <div class="detail-value">
+                        {% if bid.module_name %}
+                            {{ bid.module_name }}
+                        {% else %}
+                            <span class="text-muted">Not specified</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label class="detail-label">Bid URL</label>
+                    <div class="detail-value">
+                        <a href="{{ bid.bid_url }}"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            {{ bid.bid_url }}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label class="detail-label">Comments</label>
+                    <div class="detail-value">
+                        {% if bid.comments %}
+                            {{ bid.comments|linebreaksbr }}
+                        {% else %}
+                            <span class="text-muted">No comments</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

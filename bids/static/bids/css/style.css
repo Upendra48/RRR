@@ -1,0 +1,45 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    letter-spacing: 0.2px;
+}
+
+main {
+    min-height: calc(100vh - 140px);
+}
+
+.card {
+    border-radius: 8px;
+}
+
+.card-header {
+    background-color: #ffffff;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+.text-danger ul {
+    margin-bottom: 0;
+    padding-left: 18px;
+}
+
+footer {
+    background-color: #ffffff;
+}
+
+.detail-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.detail-value {
+    font-size: 1rem;
+    min-height: 24px;
+}
