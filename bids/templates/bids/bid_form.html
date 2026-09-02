@@ -7,15 +7,15 @@
 <div class="container py-4">
 
     <div class="row justify-content-center">
-        <div class="col-lg-9">
+        <div class="col-lg-10">
 
-            <div class="card shadow-sm legacy-card">
+            <div class="legacy-panel">
 
-                <div class="card-header legacy-title-bar">
-                    <h3 class="mb-0">{{ page_title }}</h3>
+                <div class="legacy-title-bar">
+                    {{ page_title }}
                 </div>
 
-                <div class="card-body legacy-card-body">
+                <div class="legacy-body">
 
                     <form method="post" novalidate>
                         {% csrf_token %}
@@ -27,148 +27,96 @@
                         {% endif %}
 
                         {% if form.instance.pk %}
-                            <div class="legacy-lock-notice mb-3">
+                            <div class="legacy-lock-notice">
                                 Only <strong>Has Bids</strong>, <strong>Main Bid Link</strong>, <strong>Developer</strong>, <strong>Procurement Type</strong>, and <strong>Comments</strong> can be changed here. All other fields are locked.
                             </div>
                         {% endif %}
 
 
-                        <!-- Agency Information -->
-                        <h5 class="legacy-section-heading mb-3">Agency Information</h5>
+                        <!-- Row: Agency Name / State -->
+                        <div class="legacy-row">
 
-                        <div class="row">
-
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label legacy-label-required">
-                                    Agency Name <span class="legacy-required">*</span>
-                                </label>
-
+                            <div class="legacy-cell-label required">Agency:</div>
+                            <div class="legacy-cell-input wide">
                                 {% if form.instance.pk %}
                                     <div class="detail-value-locked">{{ form.instance.agency_name }}</div>
                                     <input type="hidden" name="{{ form.agency_name.html_name }}" value="{{ form.agency_name.value }}">
                                 {% else %}
                                     {{ form.agency_name }}
-
-                                    {% if form.agency_name.errors %}
-                                        <div class="text-danger small">
-                                            {{ form.agency_name.errors }}
-                                        </div>
-                                    {% endif %}
+                                    {% if form.agency_name.errors %}<div class="text-danger small">{{ form.agency_name.errors }}</div>{% endif %}
                                 {% endif %}
                             </div>
 
-
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label legacy-label-required">
-                                    ECGAINS <span class="legacy-required">*</span>
-                                </label>
-
-                                {% if form.instance.pk %}
-                                    <div class="detail-value-locked">{{ form.instance.ecgains }}</div>
-                                    <input type="hidden" name="{{ form.ecgains.html_name }}" value="{{ form.ecgains.value }}">
-                                {% else %}
-                                    {{ form.ecgains }}
-
-                                    {% if form.ecgains.errors %}
-                                        <div class="text-danger small">
-                                            {{ form.ecgains.errors }}
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-
-
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label legacy-label-required">
-                                    State <span class="legacy-required">*</span>
-                                </label>
-
+                            <div class="legacy-cell-label">State:</div>
+                            <div class="legacy-cell-input narrow">
                                 {% if form.instance.pk %}
                                     <div class="detail-value-locked">{{ form.instance.state }}</div>
                                     <input type="hidden" name="{{ form.state.html_name }}" value="{{ form.state.value }}">
                                 {% else %}
                                     {{ form.state }}
-
-                                    {% if form.state.errors %}
-                                        <div class="text-danger small">
-                                            {{ form.state.errors }}
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-
-
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label legacy-label-required">
-                                    Contact Email <span class="legacy-required">*</span>
-                                </label>
-
-                                {% if form.instance.pk %}
-                                    <div class="detail-value-locked">{{ form.instance.contact_email }}</div>
-                                    <input type="hidden" name="{{ form.contact_email.html_name }}" value="{{ form.contact_email.value }}">
-                                {% else %}
-                                    {{ form.contact_email }}
-
-                                    {% if form.contact_email.errors %}
-                                        <div class="text-danger small">
-                                            {{ form.contact_email.errors }}
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-
-
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label legacy-label-required">
-                                    Initials <span class="legacy-required">*</span>
-                                </label>
-
-                                {% if form.instance.pk %}
-                                    <div class="detail-value-locked">{{ form.instance.initials }}</div>
-                                    <input type="hidden" name="{{ form.initials.html_name }}" value="{{ form.initials.value }}">
-                                {% else %}
-                                    {{ form.initials }}
-
-                                    {% if form.initials.errors %}
-                                        <div class="text-danger small">
-                                            {{ form.initials.errors }}
-                                        </div>
-                                    {% endif %}
+                                    {% if form.state.errors %}<div class="text-danger small">{{ form.state.errors }}</div>{% endif %}
                                 {% endif %}
                             </div>
 
                         </div>
 
 
-                        <hr class="legacy-hr my-4">
+                        <!-- Row: ECGAINS / Initials -->
+                        <div class="legacy-row">
 
-
-                        <!-- Bid Information -->
-                        <h5 class="legacy-section-heading mb-3">Bid Information</h5>
-
-                        <div class="row">
-
-                            <div class="col-md-12 mb-3">
-                                <label for="{{ form.bid_url.id_for_label }}"
-                                       class="form-label legacy-label-required">
-                                    Main Bid Link <span class="legacy-required">*</span>
-                                </label>
-
-                                {{ form.bid_url }}
-
-                                {% if form.bid_url.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.bid_url.errors }}
-                                    </div>
+                            <div class="legacy-cell-label required">ECGAINS:</div>
+                            <div class="legacy-cell-input wide">
+                                {% if form.instance.pk %}
+                                    <div class="detail-value-locked">{{ form.instance.ecgains }}</div>
+                                    <input type="hidden" name="{{ form.ecgains.html_name }}" value="{{ form.ecgains.value }}">
+                                {% else %}
+                                    {{ form.ecgains }}
+                                    {% if form.ecgains.errors %}<div class="text-danger small">{{ form.ecgains.errors }}</div>{% endif %}
                                 {% endif %}
                             </div>
 
+                            <div class="legacy-cell-label">Initials:</div>
+                            <div class="legacy-cell-input narrow">
+                                {% if form.instance.pk %}
+                                    <div class="detail-value-locked">{{ form.instance.initials }}</div>
+                                    <input type="hidden" name="{{ form.initials.html_name }}" value="{{ form.initials.value }}">
+                                {% else %}
+                                    {{ form.initials }}
+                                    {% if form.initials.errors %}<div class="text-danger small">{{ form.initials.errors }}</div>{% endif %}
+                                {% endif %}
+                            </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label legacy-label">
-                                    Module Name
-                                </label>
+                        </div>
 
+
+                        <!-- Row: Contact Email / Developer -->
+                        <div class="legacy-row">
+
+                            <div class="legacy-cell-label required">Contact<br>Email:</div>
+                            <div class="legacy-cell-input wide">
+                                {% if form.instance.pk %}
+                                    <div class="detail-value-locked">{{ form.instance.contact_email }}</div>
+                                    <input type="hidden" name="{{ form.contact_email.html_name }}" value="{{ form.contact_email.value }}">
+                                {% else %}
+                                    {{ form.contact_email }}
+                                    {% if form.contact_email.errors %}<div class="text-danger small">{{ form.contact_email.errors }}</div>{% endif %}
+                                {% endif %}
+                            </div>
+
+                            <div class="legacy-cell-label">Developer:</div>
+                            <div class="legacy-cell-input narrow">
+                                {{ form.developer }}
+                                {% if form.developer.errors %}<div class="text-danger small">{{ form.developer.errors }}</div>{% endif %}
+                            </div>
+
+                        </div>
+
+
+                        <!-- Row: Module Name / Bid Type -->
+                        <div class="legacy-row">
+
+                            <div class="legacy-cell-label">Module<br>Name:</div>
+                            <div class="legacy-cell-input wide">
                                 {% if form.instance.pk %}
                                     <div class="detail-value-locked">
                                         {% if form.instance.module_name %}{{ form.instance.module_name }}{% else %}<span class="text-muted">Not specified</span>{% endif %}
@@ -176,142 +124,87 @@
                                     <input type="hidden" name="{{ form.module_name.html_name }}" value="{{ form.module_name.value|default_if_none:'' }}">
                                 {% else %}
                                     {{ form.module_name }}
-
-                                    {% if form.module_name.errors %}
-                                        <div class="text-danger small">
-                                            {{ form.module_name.errors }}
-                                        </div>
-                                    {% endif %}
+                                    {% if form.module_name.errors %}<div class="text-danger small">{{ form.module_name.errors }}</div>{% endif %}
                                 {% endif %}
                             </div>
 
-
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.developer.id_for_label }}"
-                                       class="form-label legacy-label-required">
-                                    Developer <span class="legacy-required">*</span>
-                                </label>
-
-                                {{ form.developer }}
-
-                                {% if form.developer.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.developer.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label legacy-label-required">
-                                    Bid Type <span class="legacy-required">*</span>
-                                </label>
-
+                            <div class="legacy-cell-label">Bid Type:</div>
+                            <div class="legacy-cell-input narrow">
                                 {% if form.instance.pk %}
                                     <div class="detail-value-locked">{{ form.instance.get_bid_type_display }}</div>
                                     <input type="hidden" name="{{ form.bid_type.html_name }}" value="{{ form.bid_type.value }}">
                                 {% else %}
                                     {{ form.bid_type }}
-
-                                    {% if form.bid_type.errors %}
-                                        <div class="text-danger small">
-                                            {{ form.bid_type.errors }}
-                                        </div>
-                                    {% endif %}
+                                    {% if form.bid_type.errors %}<div class="text-danger small">{{ form.bid_type.errors }}</div>{% endif %}
                                 {% endif %}
                             </div>
 
+                        </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label legacy-label-required">
-                                    Priority <span class="legacy-required">*</span>
-                                </label>
 
+                        <!-- Row: Main Bid Link / Priority -->
+                        <div class="legacy-row">
+
+                            <div class="legacy-cell-label required">Main Bid<br>link:</div>
+                            <div class="legacy-cell-input wide">
+                                {{ form.bid_url }}
+                                {% if form.bid_url.errors %}<div class="text-danger small">{{ form.bid_url.errors }}</div>{% endif %}
+                            </div>
+
+                            <div class="legacy-cell-label">Priority:</div>
+                            <div class="legacy-cell-input narrow">
                                 {% if form.instance.pk %}
                                     <div class="detail-value-locked">{{ form.instance.get_priority_display }}</div>
                                     <input type="hidden" name="{{ form.priority.html_name }}" value="{{ form.priority.value }}">
                                 {% else %}
                                     {{ form.priority }}
-
-                                    {% if form.priority.errors %}
-                                        <div class="text-danger small">
-                                            {{ form.priority.errors }}
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-
-
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.has_bids.id_for_label }}"
-                                       class="form-label legacy-label-required">
-                                    Has Bids <span class="legacy-required">*</span>
-                                </label>
-
-                                {{ form.has_bids }}
-
-                                {% if form.has_bids.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.has_bids.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
-
-
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.procurement_type.id_for_label }}"
-                                       class="form-label legacy-label-required">
-                                    Procurement Type <span class="legacy-required">*</span>
-                                </label>
-
-                                {{ form.procurement_type }}
-
-                                {% if form.procurement_type.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.procurement_type.errors }}
-                                    </div>
+                                    {% if form.priority.errors %}<div class="text-danger small">{{ form.priority.errors }}</div>{% endif %}
                                 {% endif %}
                             </div>
 
                         </div>
 
 
-                        <hr class="legacy-hr my-4">
+                        <!-- Row: Has Bids / Procurement Type -->
+                        <div class="legacy-row">
+
+                            <div class="legacy-cell-label required">Has Bids:</div>
+                            <div class="legacy-cell-input wide">
+                                {{ form.has_bids }}
+                                {% if form.has_bids.errors %}<div class="text-danger small">{{ form.has_bids.errors }}</div>{% endif %}
+                            </div>
+
+                            <div class="legacy-cell-label">Procurement<br>Type:</div>
+                            <div class="legacy-cell-input narrow">
+                                {{ form.procurement_type }}
+                                {% if form.procurement_type.errors %}<div class="text-danger small">{{ form.procurement_type.errors }}</div>{% endif %}
+                            </div>
+
+                        </div>
 
 
-                        <!-- Comments -->
-                        <h5 class="legacy-section-heading mb-3">Additional Information</h5>
+                        <!-- Row: Comments (full width) -->
+                        <div class="legacy-row">
 
-                        <div class="mb-3">
-
-                            <label for="{{ form.comments.id_for_label }}"
-                                   class="form-label legacy-label">
-                                Comments
-                            </label>
-
-                            {{ form.comments }}
-
-                            {% if form.comments.errors %}
-                                <div class="text-danger small">
-                                    {{ form.comments.errors }}
-                                </div>
-                            {% endif %}
+                            <div class="legacy-cell-label required">Comments:</div>
+                            <div class="legacy-cell-input full">
+                                {{ form.comments }}
+                                {% if form.comments.errors %}<div class="text-danger small">{{ form.comments.errors }}</div>{% endif %}
+                            </div>
 
                         </div>
 
 
                         <!-- Buttons -->
-                        <div class="d-flex justify-content-end gap-2 mt-4">
+                        <div class="legacy-actions">
 
-                            <a href="{% url 'monitor' %}"
-                               class="btn legacy-btn-exit">
-                                Cancel
-                            </a>
-
-                            <button type="submit"
-                                    class="btn legacy-btn-save">
-                                Save Request
+                            <button type="submit" class="legacy-pill-btn save">
+                                SAVE
                             </button>
+
+                            <a href="{% url 'monitor' %}" class="legacy-pill-btn exit">
+                                EXIT
+                            </a>
 
                         </div>
 
@@ -333,102 +226,88 @@
 <style>
 
     /* Font base — matches legacy Prime Vendor look */
-    .legacy-card,
-    .legacy-card * {
+    .legacy-panel,
+    .legacy-panel * {
         font-family: Arial, Helvetica, sans-serif;
     }
 
 
-    /* Card / panel — legacy beige panel with dark border */
-    .legacy-card {
+    /* Outer panel — legacy beige box with dark border */
+    .legacy-panel {
         background-color: beige;
         border: 1px solid #777777;
-        border-radius: 0;
     }
 
 
-    /* Title bar — legacy yellow header strip */
+    /* Title bar — legacy yellow strip, centered bold dark text */
     .legacy-title-bar {
         background-color: #FFFF00;
         border-bottom: 1px solid #777777;
         text-align: center;
-    }
-
-    .legacy-title-bar h3 {
         font-size: 14px;
         font-weight: bold;
         color: #333333;
-        text-transform: none;
+        padding: 6px 10px;
     }
 
 
-    /* Body panel */
-    .legacy-card-body {
-        background-color: beige;
+    /* Body */
+    .legacy-body {
+        padding: 14px 16px;
         font-size: 12px;
     }
 
 
-    /* Section headings */
-    .legacy-section-heading {
-        font-size: 12px;
-        font-weight: bold;
-        color: #000000;
-        text-transform: uppercase;
-    }
-
-
-    /* Field labels — legacy black bold label text */
-    .legacy-label,
-    .legacy-label-required {
-        font-size: 12px;
-        font-weight: bold;
-        color: #000000;
-    }
-
-    /* Required marker — legacy red */
-    .legacy-required {
-        color: red;
-        font-weight: bold;
-    }
-
-
-    /* Divider */
-    .legacy-hr {
-        border-top: 1px solid #777777;
-        opacity: 1;
-    }
-
-
-    /* Locked field notice — legacy warning-style banner */
+    /* Locked-field notice banner */
     .legacy-lock-notice {
-        font-family: Arial, Helvetica, sans-serif;
         font-size: 11px;
         color: #555555;
         background-color: whitesmoke;
         border: 1px solid #777777;
         padding: 6px 10px;
+        margin-bottom: 14px;
     }
 
 
-    /* Locked / read-only field value */
-    .detail-value-locked {
+    /* Row grid — label / input / label / input, legacy two-column form */
+    .legacy-row {
+        display: grid;
+        grid-template-columns: 110px 1fr 110px 1fr;
+        align-items: start;
+        gap: 6px 10px;
+        margin-bottom: 8px;
+    }
+
+    .legacy-cell-label {
         font-size: 12px;
         font-weight: bold;
-        color: #555555;
-        background-color: whitesmoke;
-        border: 1px solid #777777;
-        padding: 3px 5px;
+        color: #000000;
+        padding-top: 5px;
+        line-height: 1.2;
+    }
+
+    .legacy-cell-label.required {
+        color: red;
+    }
+
+    .legacy-cell-input.wide,
+    .legacy-cell-input.narrow {
+        min-width: 0;
+    }
+
+    .legacy-cell-input.full {
+        grid-column: 2 / 5;
     }
 
 
-    /* Form controls — legacy plain bordered fields */
-    .legacy-card-body input[type="text"],
-    .legacy-card-body input[type="email"],
-    .legacy-card-body input[type="url"],
-    .legacy-card-body input:not([type="checkbox"]):not([type="radio"]),
-    .legacy-card-body select,
-    .legacy-card-body textarea {
+    /* Form controls — legacy plain white bordered fields */
+    .legacy-body input[type="text"],
+    .legacy-body input[type="email"],
+    .legacy-body input[type="url"],
+    .legacy-body input:not([type="checkbox"]):not([type="radio"]),
+    .legacy-body select,
+    .legacy-body textarea {
+        width: 100%;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 12px;
         font-weight: bold;
@@ -436,12 +315,17 @@
         background-color: #ffffff;
         border: 1px solid #777777;
         border-radius: 0;
-        padding: 3px 5px;
+        padding: 3px 6px;
     }
 
-    .legacy-card-body input:focus,
-    .legacy-card-body select:focus,
-    .legacy-card-body textarea:focus {
+    .legacy-body textarea {
+        min-height: 90px;
+        resize: vertical;
+    }
+
+    .legacy-body input:focus,
+    .legacy-body select:focus,
+    .legacy-body textarea:focus {
         outline: none;
         border-color: #000000;
         box-shadow: none;
@@ -449,35 +333,56 @@
     }
 
 
-    /* Buttons — legacy small bold action buttons */
-    .legacy-btn-save,
-    .legacy-btn-exit {
-        font-family: Arial, Helvetica, sans-serif;
+    /* Locked / read-only field value — flat text, no box, matching the legacy summary style */
+    .detail-value-locked {
+        font-size: 12px;
+        font-weight: bold;
+        color: #000000;
+        background-color: transparent;
+        border: none;
+        padding: 5px 0;
+    }
+
+
+    /* Action buttons — legacy blue capsule pills */
+    .legacy-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 16px;
+        padding-top: 10px;
+        border-top: 1px solid #777777;
+    }
+
+    .legacy-pill-btn {
+        display: inline-block;
+        background: linear-gradient(#eaf4ff, #bcdcfa 45%, #7fb8ec);
+        border: 1px solid #3d6ea5;
+        border-radius: 10px;
+        color: #08306b;
         font-size: 11px;
         font-weight: bold;
-        border: 1px solid #777777;
-        border-radius: 0;
-        padding: 4px 14px;
+        text-decoration: none;
+        white-space: nowrap;
+        padding: 4px 18px;
+        cursor: pointer;
     }
 
-    .legacy-btn-save {
-        background-color: #90ee90;
-        color: #000000;
+    .legacy-pill-btn:hover {
+        background: linear-gradient(#dcecfb, #a8cdf2 45%, #6ba7de);
+        color: #08306b;
     }
 
-    .legacy-btn-save:hover {
-        background-color: #6fd66f;
-        color: #000000;
-    }
 
-    .legacy-btn-exit {
-        background-color: #e0e0e0;
-        color: #000000;
-    }
+    /* Stack to a single column on small screens */
+    @media (max-width: 640px) {
+        .legacy-row {
+            grid-template-columns: 1fr;
+        }
 
-    .legacy-btn-exit:hover {
-        background-color: #cccccc;
-        color: #000000;
+        .legacy-cell-input.full {
+            grid-column: 1;
+        }
     }
 
 </style>

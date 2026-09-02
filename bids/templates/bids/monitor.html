@@ -6,23 +6,6 @@
 
 <div class="container-fluid py-4">
 
-    <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-
-        <div>
-            <h2 class="mb-1">Bid Repair Monitor</h2>
-            <p class="text-muted mb-0">
-                Monitor and manage bid repair requests.
-            </p>
-        </div>
-
-        <a href="{% url 'create_bid' %}" class="btn btn-primary">
-            New Request
-        </a>
-
-    </div>
-
-
     <!-- Monitor Buttons -->
     <div class="d-flex justify-content-center align-items-center gap-2 mb-3">
 
@@ -42,17 +25,21 @@
     <!-- Monitor Table -->
     <div class="table-responsive">
 
-        <table class="table table-sm table-bordered align-middle monitor-table">
+        <table class="table table-sm align-middle monitor-table">
 
             <thead>
                 <tr>
-                    <th>ECGAINS</th>
-                    <th>Agency</th>
-                    <th>Date</th>
-                    <th>Procurement Type</th>
-                    <th class="text-center">Has Bid</th>
-                    <th class="text-center">URL</th>
-                    <th class="text-center">View / Update</th>
+                    <th class="col-ecgains">ECGAINS:</th>
+                    <th class="col-agency">Agency Name:</th>
+                    <th class="col-date">Date:</th>
+                    <th class="col-type">Procurement Type:</th>
+                    <th class="col-hasbid text-center">Has Bid:</th>
+                    <th class="col-url text-center">URL:</th>
+                    <th class="col-action text-center">
+                        <a href="{% url 'create_bid' %}" class="new-report-btn">
+                            NEW REPORT
+                        </a>
+                    </th>
                 </tr>
             </thead>
 
@@ -76,7 +63,7 @@
                     >
 
                         <!-- ECGAINS -->
-                        <td>
+                        <td class="col-ecgains">
                             <a href="{% url 'bid_detail' bid.ecgains %}"
                                class="ecgains-link">
                                 {{ bid.ecgains }}
@@ -85,25 +72,25 @@
 
 
                         <!-- Agency -->
-                        <td>
-                            <strong>{{ bid.agency_name }}</strong>
+                        <td class="col-agency">
+                            <span class="agency-name">{{ bid.agency_name }}</span>
                         </td>
 
 
                         <!-- Date -->
-                        <td>
+                        <td class="col-date">
                             {{ bid.date|date:"m/d/Y" }}
                         </td>
 
 
-                        <!-- Procurement Type -->
-                        <td>
+                        <!-- Type -->
+                        <td class="col-type">
                             {{ bid.get_procurement_type_display }}
                         </td>
 
 
                         <!-- Has Bid -->
-                        <td class="text-center">
+                        <td class="col-hasbid text-center">
 
                             {% if bid.has_bids %}
 
@@ -123,7 +110,7 @@
 
 
                         <!-- URL -->
-                        <td class="text-center">
+                        <td class="col-url text-center">
 
                             {% if bid.bid_url %}
 
@@ -146,10 +133,10 @@
 
 
                         <!-- View / Update -->
-                        <td class="text-center">
+                        <td class="col-action text-center">
 
                             <a href="{% url 'bid_detail' bid.ecgains %}"
-                               class="btn btn-sm view-btn">
+                               class="update-btn">
                                 UPDATE
                             </a>
 
@@ -207,38 +194,89 @@
     }
 
 
-    /* Main monitor table */
+    /* Main monitor table — borderless, flush rows like the legacy screen */
     .monitor-table {
         width: 95%;
         margin: 0 auto;
         background-color: beige;
         font-size: 12px;
-        border: 1px solid #777777;
+        border-collapse: collapse;
+        border: none;
     }
 
 
-    /* Table header — legacy gray header, white bold text */
+    /* Table header — legacy gray bar, white bold labels */
     .monitor-table thead th {
-        background-color: gray;
+        background-color: #808080;
         color: #ffffff;
         font-size: 12px;
         font-weight: bold;
-        border-color: #777777;
+        border: none;
         white-space: nowrap;
         vertical-align: middle;
-        padding: 6px 8px;
+        padding: 6px 10px;
     }
 
 
-    /* Table cells */
+    /* Centered "OPEN SPIDER REQUESTS" title embedded in the Agency header cell */
+    .agency-header-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .agency-header-title {
+        flex: 1;
+        text-align: center;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+    }
+
+
+    /* New Report pill button, embedded in the header bar */
+    .new-report-btn {
+        display: inline-block;
+        background: linear-gradient(#eaf4ff, #bcdcfa 45%, #7fb8ec);
+        border: 1px solid #3d6ea5;
+        border-radius: 10px;
+        color: #08306b;
+        font-size: 11px;
+        font-weight: bold;
+        text-decoration: none;
+        white-space: nowrap;
+        padding: 3px 12px;
+    }
+
+    .new-report-btn:hover {
+        background: linear-gradient(#dcecfb, #a8cdf2 45%, #6ba7de);
+        color: #08306b;
+    }
+
+
+    /* Table cells — no borders, tight legacy row padding */
     .monitor-table tbody td {
-        padding: 5px 7px;
-        border-color: #777777;
+        padding: 4px 10px;
+        border: none;
         vertical-align: middle;
         font-size: 12px;
         font-weight: bold;
         color: #000000;
     }
+
+    .monitor-table tbody tr {
+        border: none;
+    }
+
+
+    /* Column widths, matching the legacy proportions */
+    .col-ecgains { width: 16%; white-space: nowrap; }
+    .col-agency  { width: 40%; }
+    .col-date    { width: 10%; white-space: nowrap; }
+    .col-type    { width: 9%;  white-space: nowrap; }
+    .col-hasbid  { width: 8%;  white-space: nowrap; }
+    .col-url     { width: 7%;  white-space: nowrap; }
+    .col-action  { width: 10%; white-space: nowrap; }
 
 
     /* Alternating rows (legacy filedatablock / whitesmoke pattern) */
@@ -267,12 +305,23 @@
     }
 
 
-    /* ECGAINS link */
+    /* ECGAINS link — legacy dark maroon bold, no underline */
     .ecgains-link {
-        color: #000000;
+        color: #8b0000;
         font-weight: bold;
-        text-decoration: underline;
+        text-decoration: none;
         white-space: nowrap;
+    }
+
+    .ecgains-link:hover {
+        text-decoration: underline;
+    }
+
+
+    /* Agency name — same dark maroon bold treatment */
+    .agency-name {
+        color: #8b0000;
+        font-weight: bold;
     }
 
 
@@ -288,7 +337,7 @@
     .has-bid {
         color: #000000;
         font-weight: bold;
-        text-decoration: none;
+        text-decoration: underline;
         white-space: nowrap;
     }
 
@@ -300,21 +349,23 @@
     }
 
 
-    /* View / Update button — legacy small bold action button */
-    .view-btn {
-        font-family: Arial, Helvetica, sans-serif;
+    /* Update pill button — legacy blue capsule */
+    .update-btn {
+        display: inline-block;
+        background: linear-gradient(#eaf4ff, #bcdcfa 45%, #7fb8ec);
+        border: 1px solid #3d6ea5;
+        border-radius: 10px;
+        color: #08306b;
         font-size: 11px;
         font-weight: bold;
-        color: #000000;
-        background-color: #e0e0e0;
-        border: 1px solid #777777;
-        padding: 2px 8px;
+        text-decoration: none;
         white-space: nowrap;
+        padding: 2px 14px;
     }
 
-    .view-btn:hover {
-        background-color: #cccccc;
-        color: #000000;
+    .update-btn:hover {
+        background: linear-gradient(#dcecfb, #a8cdf2 45%, #6ba7de);
+        color: #08306b;
     }
 
 </style>
