@@ -9,13 +9,13 @@
     <div class="row justify-content-center">
         <div class="col-lg-9">
 
-            <div class="card shadow-sm">
+            <div class="card shadow-sm legacy-card">
 
-                <div class="card-header">
+                <div class="card-header legacy-title-bar">
                     <h3 class="mb-0">{{ page_title }}</h3>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body legacy-card-body">
 
                     <form method="post" novalidate>
                         {% csrf_token %}
@@ -26,106 +26,132 @@
                             </div>
                         {% endif %}
 
+                        {% if form.instance.pk %}
+                            <div class="legacy-lock-notice mb-3">
+                                Only <strong>Has Bids</strong>, <strong>Main Bid Link</strong>, <strong>Developer</strong>, <strong>Procurement Type</strong>, and <strong>Comments</strong> can be changed here. All other fields are locked.
+                            </div>
+                        {% endif %}
+
 
                         <!-- Agency Information -->
-                        <h5 class="mb-3">Agency Information</h5>
+                        <h5 class="legacy-section-heading mb-3">Agency Information</h5>
 
                         <div class="row">
 
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.agency_name.id_for_label }}"
-                                       class="form-label">
-                                    Agency Name <span class="text-danger">*</span>
+                                <label class="form-label legacy-label-required">
+                                    Agency Name <span class="legacy-required">*</span>
                                 </label>
 
-                                {{ form.agency_name }}
+                                {% if form.instance.pk %}
+                                    <div class="detail-value-locked">{{ form.instance.agency_name }}</div>
+                                    <input type="hidden" name="{{ form.agency_name.html_name }}" value="{{ form.agency_name.value }}">
+                                {% else %}
+                                    {{ form.agency_name }}
 
-                                {% if form.agency_name.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.agency_name.errors }}
-                                    </div>
+                                    {% if form.agency_name.errors %}
+                                        <div class="text-danger small">
+                                            {{ form.agency_name.errors }}
+                                        </div>
+                                    {% endif %}
                                 {% endif %}
                             </div>
 
 
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.ecgains.id_for_label }}"
-                                       class="form-label">
-                                    ECGAINS <span class="text-danger">*</span>
+                                <label class="form-label legacy-label-required">
+                                    ECGAINS <span class="legacy-required">*</span>
                                 </label>
 
-                                {{ form.ecgains }}
+                                {% if form.instance.pk %}
+                                    <div class="detail-value-locked">{{ form.instance.ecgains }}</div>
+                                    <input type="hidden" name="{{ form.ecgains.html_name }}" value="{{ form.ecgains.value }}">
+                                {% else %}
+                                    {{ form.ecgains }}
 
-                                {% if form.ecgains.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.ecgains.errors }}
-                                    </div>
+                                    {% if form.ecgains.errors %}
+                                        <div class="text-danger small">
+                                            {{ form.ecgains.errors }}
+                                        </div>
+                                    {% endif %}
                                 {% endif %}
                             </div>
 
 
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.state.id_for_label }}"
-                                       class="form-label">
-                                    State <span class="text-danger">*</span>
+                                <label class="form-label legacy-label-required">
+                                    State <span class="legacy-required">*</span>
                                 </label>
 
-                                {{ form.state }}
+                                {% if form.instance.pk %}
+                                    <div class="detail-value-locked">{{ form.instance.state }}</div>
+                                    <input type="hidden" name="{{ form.state.html_name }}" value="{{ form.state.value }}">
+                                {% else %}
+                                    {{ form.state }}
 
-                                {% if form.state.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.state.errors }}
-                                    </div>
+                                    {% if form.state.errors %}
+                                        <div class="text-danger small">
+                                            {{ form.state.errors }}
+                                        </div>
+                                    {% endif %}
                                 {% endif %}
                             </div>
 
 
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.contact_email.id_for_label }}"
-                                       class="form-label">
-                                    Contact Email <span class="text-danger">*</span>
+                                <label class="form-label legacy-label-required">
+                                    Contact Email <span class="legacy-required">*</span>
                                 </label>
 
-                                {{ form.contact_email }}
+                                {% if form.instance.pk %}
+                                    <div class="detail-value-locked">{{ form.instance.contact_email }}</div>
+                                    <input type="hidden" name="{{ form.contact_email.html_name }}" value="{{ form.contact_email.value }}">
+                                {% else %}
+                                    {{ form.contact_email }}
 
-                                {% if form.contact_email.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.contact_email.errors }}
-                                    </div>
+                                    {% if form.contact_email.errors %}
+                                        <div class="text-danger small">
+                                            {{ form.contact_email.errors }}
+                                        </div>
+                                    {% endif %}
                                 {% endif %}
                             </div>
 
 
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.initials.id_for_label }}"
-                                       class="form-label">
-                                    Initials <span class="text-danger">*</span>
+                                <label class="form-label legacy-label-required">
+                                    Initials <span class="legacy-required">*</span>
                                 </label>
 
-                                {{ form.initials }}
+                                {% if form.instance.pk %}
+                                    <div class="detail-value-locked">{{ form.instance.initials }}</div>
+                                    <input type="hidden" name="{{ form.initials.html_name }}" value="{{ form.initials.value }}">
+                                {% else %}
+                                    {{ form.initials }}
 
-                                {% if form.initials.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.initials.errors }}
-                                    </div>
+                                    {% if form.initials.errors %}
+                                        <div class="text-danger small">
+                                            {{ form.initials.errors }}
+                                        </div>
+                                    {% endif %}
                                 {% endif %}
                             </div>
 
                         </div>
 
 
-                        <hr class="my-4">
+                        <hr class="legacy-hr my-4">
 
 
                         <!-- Bid Information -->
-                        <h5 class="mb-3">Bid Information</h5>
+                        <h5 class="legacy-section-heading mb-3">Bid Information</h5>
 
                         <div class="row">
 
                             <div class="col-md-12 mb-3">
                                 <label for="{{ form.bid_url.id_for_label }}"
-                                       class="form-label">
-                                    Main Bid Link <span class="text-danger">*</span>
+                                       class="form-label legacy-label-required">
+                                    Main Bid Link <span class="legacy-required">*</span>
                                 </label>
 
                                 {{ form.bid_url }}
@@ -139,25 +165,31 @@
 
 
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.module_name.id_for_label }}"
-                                       class="form-label">
+                                <label class="form-label legacy-label">
                                     Module Name
                                 </label>
 
-                                {{ form.module_name }}
-
-                                {% if form.module_name.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.module_name.errors }}
+                                {% if form.instance.pk %}
+                                    <div class="detail-value-locked">
+                                        {% if form.instance.module_name %}{{ form.instance.module_name }}{% else %}<span class="text-muted">Not specified</span>{% endif %}
                                     </div>
+                                    <input type="hidden" name="{{ form.module_name.html_name }}" value="{{ form.module_name.value|default_if_none:'' }}">
+                                {% else %}
+                                    {{ form.module_name }}
+
+                                    {% if form.module_name.errors %}
+                                        <div class="text-danger small">
+                                            {{ form.module_name.errors }}
+                                        </div>
+                                    {% endif %}
                                 {% endif %}
                             </div>
 
 
                             <div class="col-md-6 mb-3">
                                 <label for="{{ form.developer.id_for_label }}"
-                                       class="form-label">
-                                    Developer <span class="text-danger">*</span>
+                                       class="form-label legacy-label-required">
+                                    Developer <span class="legacy-required">*</span>
                                 </label>
 
                                 {{ form.developer }}
@@ -171,41 +203,49 @@
 
 
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.bid_type.id_for_label }}"
-                                       class="form-label">
-                                    Bid Type <span class="text-danger">*</span>
+                                <label class="form-label legacy-label-required">
+                                    Bid Type <span class="legacy-required">*</span>
                                 </label>
 
-                                {{ form.bid_type }}
+                                {% if form.instance.pk %}
+                                    <div class="detail-value-locked">{{ form.instance.get_bid_type_display }}</div>
+                                    <input type="hidden" name="{{ form.bid_type.html_name }}" value="{{ form.bid_type.value }}">
+                                {% else %}
+                                    {{ form.bid_type }}
 
-                                {% if form.bid_type.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.bid_type.errors }}
-                                    </div>
+                                    {% if form.bid_type.errors %}
+                                        <div class="text-danger small">
+                                            {{ form.bid_type.errors }}
+                                        </div>
+                                    {% endif %}
                                 {% endif %}
                             </div>
 
 
                             <div class="col-md-6 mb-3">
-                                <label for="{{ form.priority.id_for_label }}"
-                                       class="form-label">
-                                    Priority <span class="text-danger">*</span>
+                                <label class="form-label legacy-label-required">
+                                    Priority <span class="legacy-required">*</span>
                                 </label>
 
-                                {{ form.priority }}
+                                {% if form.instance.pk %}
+                                    <div class="detail-value-locked">{{ form.instance.get_priority_display }}</div>
+                                    <input type="hidden" name="{{ form.priority.html_name }}" value="{{ form.priority.value }}">
+                                {% else %}
+                                    {{ form.priority }}
 
-                                {% if form.priority.errors %}
-                                    <div class="text-danger small">
-                                        {{ form.priority.errors }}
-                                    </div>
+                                    {% if form.priority.errors %}
+                                        <div class="text-danger small">
+                                            {{ form.priority.errors }}
+                                        </div>
+                                    {% endif %}
                                 {% endif %}
                             </div>
 
 
                             <div class="col-md-6 mb-3">
                                 <label for="{{ form.has_bids.id_for_label }}"
-                                       class="form-label">
-                                    Has Bids <span class="text-danger">*</span>
+                                       class="form-label legacy-label-required">
+                                    Has Bids <span class="legacy-required">*</span>
                                 </label>
 
                                 {{ form.has_bids }}
@@ -220,8 +260,8 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="{{ form.procurement_type.id_for_label }}"
-                                       class="form-label">
-                                    Procurement Type <span class="text-danger">*</span>
+                                       class="form-label legacy-label-required">
+                                    Procurement Type <span class="legacy-required">*</span>
                                 </label>
 
                                 {{ form.procurement_type }}
@@ -236,16 +276,16 @@
                         </div>
 
 
-                        <hr class="my-4">
+                        <hr class="legacy-hr my-4">
 
 
                         <!-- Comments -->
-                        <h5 class="mb-3">Additional Information</h5>
+                        <h5 class="legacy-section-heading mb-3">Additional Information</h5>
 
                         <div class="mb-3">
 
                             <label for="{{ form.comments.id_for_label }}"
-                                   class="form-label">
+                                   class="form-label legacy-label">
                                 Comments
                             </label>
 
@@ -264,12 +304,12 @@
                         <div class="d-flex justify-content-end gap-2 mt-4">
 
                             <a href="{% url 'monitor' %}"
-                               class="btn btn-secondary">
+                               class="btn legacy-btn-exit">
                                 Cancel
                             </a>
 
                             <button type="submit"
-                                    class="btn btn-primary">
+                                    class="btn legacy-btn-save">
                                 Save Request
                             </button>
 
@@ -284,5 +324,162 @@
     </div>
 
 </div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    /* Font base — matches legacy Prime Vendor look */
+    .legacy-card,
+    .legacy-card * {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+
+    /* Card / panel — legacy beige panel with dark border */
+    .legacy-card {
+        background-color: beige;
+        border: 1px solid #777777;
+        border-radius: 0;
+    }
+
+
+    /* Title bar — legacy yellow header strip */
+    .legacy-title-bar {
+        background-color: #FFFF00;
+        border-bottom: 1px solid #777777;
+        text-align: center;
+    }
+
+    .legacy-title-bar h3 {
+        font-size: 14px;
+        font-weight: bold;
+        color: #333333;
+        text-transform: none;
+    }
+
+
+    /* Body panel */
+    .legacy-card-body {
+        background-color: beige;
+        font-size: 12px;
+    }
+
+
+    /* Section headings */
+    .legacy-section-heading {
+        font-size: 12px;
+        font-weight: bold;
+        color: #000000;
+        text-transform: uppercase;
+    }
+
+
+    /* Field labels — legacy black bold label text */
+    .legacy-label,
+    .legacy-label-required {
+        font-size: 12px;
+        font-weight: bold;
+        color: #000000;
+    }
+
+    /* Required marker — legacy red */
+    .legacy-required {
+        color: red;
+        font-weight: bold;
+    }
+
+
+    /* Divider */
+    .legacy-hr {
+        border-top: 1px solid #777777;
+        opacity: 1;
+    }
+
+
+    /* Locked field notice — legacy warning-style banner */
+    .legacy-lock-notice {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        color: #555555;
+        background-color: whitesmoke;
+        border: 1px solid #777777;
+        padding: 6px 10px;
+    }
+
+
+    /* Locked / read-only field value */
+    .detail-value-locked {
+        font-size: 12px;
+        font-weight: bold;
+        color: #555555;
+        background-color: whitesmoke;
+        border: 1px solid #777777;
+        padding: 3px 5px;
+    }
+
+
+    /* Form controls — legacy plain bordered fields */
+    .legacy-card-body input[type="text"],
+    .legacy-card-body input[type="email"],
+    .legacy-card-body input[type="url"],
+    .legacy-card-body input:not([type="checkbox"]):not([type="radio"]),
+    .legacy-card-body select,
+    .legacy-card-body textarea {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        color: #000000;
+        background-color: #ffffff;
+        border: 1px solid #777777;
+        border-radius: 0;
+        padding: 3px 5px;
+    }
+
+    .legacy-card-body input:focus,
+    .legacy-card-body select:focus,
+    .legacy-card-body textarea:focus {
+        outline: none;
+        border-color: #000000;
+        box-shadow: none;
+        background-color: #ffffcc;
+    }
+
+
+    /* Buttons — legacy small bold action buttons */
+    .legacy-btn-save,
+    .legacy-btn-exit {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        font-weight: bold;
+        border: 1px solid #777777;
+        border-radius: 0;
+        padding: 4px 14px;
+    }
+
+    .legacy-btn-save {
+        background-color: #90ee90;
+        color: #000000;
+    }
+
+    .legacy-btn-save:hover {
+        background-color: #6fd66f;
+        color: #000000;
+    }
+
+    .legacy-btn-exit {
+        background-color: #e0e0e0;
+        color: #000000;
+    }
+
+    .legacy-btn-exit:hover {
+        background-color: #cccccc;
+        color: #000000;
+    }
+
+</style>
 
 {% endblock %}

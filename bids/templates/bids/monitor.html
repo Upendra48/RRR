@@ -49,7 +49,7 @@
                     <th>ECGAINS</th>
                     <th>Agency</th>
                     <th>Date</th>
-                    <th>Type</th>
+                    <th>Procurement Type</th>
                     <th class="text-center">Has Bid</th>
                     <th class="text-center">URL</th>
                     <th class="text-center">View / Update</th>
@@ -65,7 +65,13 @@
 
                     <tr
                         {% if bid.priority == "high" %}
-                            class="high-priority"
+                            class="priority-high"
+                        {% elif bid.priority == "medium" %}
+                            class="priority-medium"
+                        {% elif forloop.counter0|divisibleby:2 %}
+                            class="row-alt-a"
+                        {% else %}
+                            class="row-alt-b"
                         {% endif %}
                     >
 
@@ -90,9 +96,9 @@
                         </td>
 
 
-                        <!-- Type -->
+                        <!-- Procurement Type -->
                         <td>
-                            {{ bid.get_bid_type_display }}
+                            {{ bid.get_procurement_type_display }}
                         </td>
 
 
@@ -131,7 +137,7 @@
                             {% else %}
 
                                 <span class="text-muted">
-                                    —
+                                    &mdash;
                                 </span>
 
                             {% endif %}
@@ -143,8 +149,8 @@
                         <td class="text-center">
 
                             <a href="{% url 'bid_detail' bid.ecgains %}"
-                               class="btn btn-primary btn-sm view-btn">
-                                VIEW / UPDATE
+                               class="btn btn-sm view-btn">
+                                UPDATE
                             </a>
 
                         </td>
@@ -194,23 +200,33 @@
 
 <style>
 
+    /* Font base — matches legacy Prime Vendor look */
+    .monitor-table,
+    .monitor-table * {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+
     /* Main monitor table */
     .monitor-table {
         width: 95%;
         margin: 0 auto;
-        background-color: #ffffff;
-        font-size: 14px;
+        background-color: beige;
+        font-size: 12px;
+        border: 1px solid #777777;
     }
 
 
-    /* Table header */
+    /* Table header — legacy gray header, white bold text */
     .monitor-table thead th {
-        background-color: #808080;
+        background-color: gray;
         color: #ffffff;
+        font-size: 12px;
         font-weight: bold;
         border-color: #777777;
         white-space: nowrap;
         vertical-align: middle;
+        padding: 6px 8px;
     }
 
 
@@ -219,18 +235,41 @@
         padding: 5px 7px;
         border-color: #777777;
         vertical-align: middle;
+        font-size: 12px;
+        font-weight: bold;
+        color: #000000;
     }
 
 
-    /* Row hover */
+    /* Alternating rows (legacy filedatablock / whitesmoke pattern) */
+    .monitor-table tbody tr.row-alt-a {
+        background-color: beige;
+    }
+
+    .monitor-table tbody tr.row-alt-b {
+        background-color: whitesmoke;
+    }
+
+
+    /* Priority rows — legacy red / orange */
+    .monitor-table tbody tr.priority-high {
+        background-color: #FF2424 !important;
+    }
+
+    .monitor-table tbody tr.priority-medium {
+        background-color: orange !important;
+    }
+
+
+    /* Row hover — legacy yellow highlight */
     .monitor-table tbody tr:hover {
-        background-color: #ffff00 !important;
+        background-color: yellow !important;
     }
 
 
     /* ECGAINS link */
     .ecgains-link {
-        color: #0000ee;
+        color: #000000;
         font-weight: bold;
         text-decoration: underline;
         white-space: nowrap;
@@ -239,7 +278,7 @@
 
     /* Bid URL */
     .bid-url {
-        color: #0000ee;
+        color: #000000;
         font-weight: bold;
         text-decoration: underline;
     }
@@ -247,9 +286,9 @@
 
     /* Has Bid */
     .has-bid {
-        color: #0000ee;
+        color: #000000;
         font-weight: bold;
-        text-decoration: underline;
+        text-decoration: none;
         white-space: nowrap;
     }
 
@@ -257,29 +296,25 @@
     /* No Bid */
     .no-bid {
         color: #555555;
+        font-weight: normal;
     }
 
 
-    /* View / Update button */
+    /* View / Update button — legacy small bold action button */
     .view-btn {
+        font-family: Arial, Helvetica, sans-serif;
         font-size: 11px;
         font-weight: bold;
-        padding: 3px 8px;
+        color: #000000;
+        background-color: #e0e0e0;
+        border: 1px solid #777777;
+        padding: 2px 8px;
         white-space: nowrap;
     }
 
-
-    /* High priority */
-    .high-priority {
-        background-color: #ff2424;
-    }
-
-
-    /* Keep links readable on high priority rows */
-    .high-priority .ecgains-link,
-    .high-priority .bid-url,
-    .high-priority .has-bid {
-        color: #0000ee;
+    .view-btn:hover {
+        background-color: #cccccc;
+        color: #000000;
     }
 
 </style>
