@@ -139,3 +139,68 @@ class BidForm(forms.ModelForm):
         if bid_url and not bid_url.startswith(("http://", "https://")):
             raise forms.ValidationError("Bid URL must start with http:// or https://.")
         return bid_url
+
+
+class BidUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Bid
+        fields = [
+            "has_bids",
+            "bid_url",
+            "developer",
+            "procurement_type",
+            "comments",
+        ]
+        widgets = {
+            "has_bids": forms.Select(
+                choices=[
+                    (True, "Yes"),
+                    (False, "No"),
+                ],
+                attrs={"class": "form-select"},
+            ),
+            "bid_url": forms.URLInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "https://example.com/bid",
+                }
+            ),
+            "developer": forms.Select(
+                attrs={"class": "form-select"}
+            ),
+            "procurement_type": forms.Select(
+                attrs={"class": "form-select"}
+            ),
+            "comments": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Enter comments",
+                    "rows": 4,
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        queryset = Developer.objects.filter(active=True).order_by("name")
+        if self.instance.pk and self.instance.developer_id:
+            queryset = queryset | Developer.objects.filter(
+                pk=self.instance.developer_id,
+            )
+
+        self.fields["developer"].queryset = queryset.distinct()
+        self.fields["developer"].empty_label = "Select Developer"
+        self.fields["has_bids"].widget = forms.Select(
+            choices=[
+                (True, "Yes"),
+                (False, "No"),
+            ],
+            attrs={"class": "form-select"},
+        )
+
+    def clean_bid_url(self):
+        bid_url = self.cleaned_data.get("bid_url")
+        if bid_url and not bid_url.startswith(("http://", "https://")):
+            raise forms.ValidationError("Bid URL must start with http:// or https://.")
+        return bid_url

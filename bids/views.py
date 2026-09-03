@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import BidForm
+from .forms import BidForm, BidUpdateForm
 from .models import Bid
+from django.db.models import Q
 
 
 def monitor(request):
@@ -14,8 +15,9 @@ def monitor(request):
 
     if q:
         bids = bids.filter(
-            agency_name__icontains=q
-            ) | bids.filter(ecgains__icontains=q)
+        Q(agency_name__icontains=q) |
+        Q(ecgains__icontains=q)
+        )
 
     if priority:
         bids = bids.filter(priority=priority)
@@ -72,14 +74,14 @@ def edit_bid(request, ecgains):
     bid = get_object_or_404(Bid, ecgains=ecgains)
 
     if request.method == "POST":
-        form = BidForm(request.POST, instance=bid)
+        form = BidUpdateForm(request.POST, instance=bid)
 
         if form.is_valid():
             form.save()
             messages.success(request, "Bid request updated successfully.")
             return redirect("bid_detail", ecgains=bid.ecgains)
     else:
-        form = BidForm(instance=bid)
+        form = BidUpdateForm(instance=bid)
 
     return render(
         request,
