@@ -92,7 +92,7 @@
                     name="q"
                     value="{{ query|default_if_none:'' }}"
                     class="toolbar-input search-input"
-                    placeholder="Agency or ECGAINS"
+                    placeholder="ECGAINS or Developer First Name"
                 >
             </div>
 
@@ -124,15 +124,12 @@
                 <tr>
                     <th class="col-ecgains">ECGAINS:</th>
                     <th class="col-agency">Agency Name:</th>
+                    <th class="col-developer">Developer:</th>
                     <th class="col-date">Date:</th>
                     <th class="col-type">Procurement Type:</th>
                     <th class="col-hasbid text-center">Has Bid:</th>
                     <th class="col-url text-center">URL:</th>
-                    <!-- <th class="col-action text-center">
-                        <a href="{% url 'create_bid' %}" class="new-report-btn">
-                            NEW REPORT
-                        </a>
-                    </th> -->
+                    <th class="col-action text-center">View/Update:</th>
                 </tr>
             </thead>
 
@@ -165,6 +162,18 @@
                         <!-- Agency -->
                         <td class="col-agency">
                             <span class="agency-name">{{ bid.agency_name }}</span>
+                        </td>
+
+
+                        <!-- Developer -->
+                        <td class="col-developer">
+                            <span class="developer-name">
+                                {% if bid.developer %}
+                                    {{ bid.developer.first_name }}
+                                {% else %}
+                                    <span class="text-muted">&mdash;</span>
+                                {% endif %}
+                            </span>
                         </td>
 
 
@@ -242,7 +251,7 @@
                     <!-- No Requests -->
                     <tr>
 
-                        <td colspan="7" class="text-center py-5">
+                        <td colspan="8" class="text-center py-5">
 
                             {% if query or selected_priority %}
 
@@ -252,10 +261,10 @@
 
                                 <p class="text-muted mb-3">
                                     {% if query and selected_priority %}
-                                        No bid with ECGAINS or Agency Name matching
+                                        No bid with ECGAINS or Developer First Name matching
                                         &ldquo;{{ query }}&rdquo; and Priority &ldquo;{{ selected_priority }}&rdquo; was found.
                                     {% elif query %}
-                                        No bid with ECGAINS or Agency Name matching
+                                        No bid with ECGAINS or Developer First Name matching
                                         &ldquo;{{ query }}&rdquo; was found.
                                     {% else %}
                                         No bid with Priority &ldquo;{{ selected_priority }}&rdquo; was found.
@@ -277,10 +286,10 @@
                                     There are currently no requests in the monitor.
                                 </p>
 
-                                <a href="{% url 'create_bid' %}"
+                                <!-- <a href="{% url 'create_bid' %}"
                                    class="btn btn-primary">
                                     Create First Request
-                                </a>
+                                </a> -->
 
                             {% endif %}
 
@@ -542,26 +551,6 @@
     }
 
 
-    /* New Report pill button, embedded in the header bar */
-    .new-report-btn {
-        display: inline-block;
-        background: linear-gradient(#eaf4ff, #bcdcfa 45%, #7fb8ec);
-        border: 1px solid #3d6ea5;
-        border-radius: 10px;
-        color: #08306b;
-        font-size: 11px;
-        font-weight: bold;
-        text-decoration: none;
-        white-space: nowrap;
-        padding: 3px 12px;
-    }
-
-    .new-report-btn:hover {
-        background: linear-gradient(#dcecfb, #a8cdf2 45%, #6ba7de);
-        color: #08306b;
-    }
-
-
     /* Table cells — no borders, tight legacy row padding */
     .monitor-table tbody td {
         padding: 4px 10px;
@@ -577,14 +566,16 @@
     }
 
 
-    /* Column widths, matching the legacy proportions */
-    .col-ecgains { width: 16%; white-space: nowrap; }
-    .col-agency  { width: 40%; }
-    .col-date    { width: 10%; white-space: nowrap; }
-    .col-type    { width: 9%;  white-space: nowrap; }
-    .col-hasbid  { width: 8%;  white-space: nowrap; }
-    .col-url     { width: 7%;  white-space: nowrap; }
-    .col-action  { width: 10%; white-space: nowrap; }
+    /* Column widths, matching the legacy proportions
+       (8 columns now that Developer is included) */
+    .col-ecgains   { width: 14%; white-space: nowrap; }
+    .col-agency    { width: 30%; }
+    .col-developer { width: 13%; white-space: nowrap; }
+    .col-date      { width: 9%;  white-space: nowrap; }
+    .col-type      { width: 9%;  white-space: nowrap; }
+    .col-hasbid    { width: 7%;  white-space: nowrap; }
+    .col-url       { width: 7%;  white-space: nowrap; }
+    .col-action    { width: 11%; white-space: nowrap; }
 
 
     /* Alternating rows */
@@ -599,7 +590,7 @@
 
     /* Priority rows — only High exists on the model, no Medium tier */
     .monitor-table tbody tr.priority-high {
-        background-color: #FF2424 !important;
+        background-color: #FFA500 !important;
     }
 
 
@@ -625,6 +616,13 @@
     /* Agency name */
     .agency-name {
         color: #8b0000;
+        font-weight: bold;
+    }
+
+
+    /* Developer name */
+    .developer-name {
+        color: #000000;
         font-weight: bold;
     }
 

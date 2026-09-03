@@ -52,14 +52,34 @@ class BidFeatureTests(TestCase):
         self.assertEqual(form.status_code, 200)
         self.assertContains(form, "already exists")
 
-    def test_monitor_filters_by_search_and_priority(self):
+    def test_monitor_filters_by_ecgains_and_priority(self):
         self._make_bid(agency_name="Alpha Agency", ecgains="02-03-002-0001-000001", priority=Bid.Priority.HIGH, has_bids=True)
         self._make_bid(agency_name="Beta Agency", ecgains="02-03-002-0001-000002", priority=Bid.Priority.NORMAL, has_bids=False)
 
-        response = self.client.get(reverse("monitor"), {"q": "Alpha", "priority": Bid.Priority.HIGH})
+        response = self.client.get(reverse("monitor"), {"q": "000001", "priority": Bid.Priority.HIGH})
 
         self.assertContains(response, "Alpha Agency")
         self.assertNotContains(response, "Beta Agency")
+
+        response = self.client.get(reverse("monitor"), {"q": "Alpha"})
+
+        self.assertContains(response, "No matching bid requests found.")
+
+    def test_monitor_search_matches_developer_name(self):
+        developer = Developer.objects.create(name="First Name Developer", active=True)
+        self._make_bid(developer=developer)
+
+        response = self.client.get(reverse("monitor"), {"q": "First"})
+
+        self.assertContains(response, "Test Agency")
+
+    def test_monitor_search_shows_no_results_for_unknown_term(self):
+        self._make_bid()
+
+        response = self.client.get(reverse("monitor"), {"q": "DoesNotExist"})
+
+        self.assertNotContains(response, "Test Agency")
+        self.assertContains(response, "No matching bid requests found.")
 
     def test_delete_archives_bid_before_removing_it(self):
         bid = self._make_bid()

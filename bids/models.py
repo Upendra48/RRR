@@ -4,6 +4,10 @@ from django.db import models
 class Developer(models.Model):
     name = models.CharField(max_length=100)
     active = models.BooleanField(default=True)
+
+    @property
+    def first_name(self):
+        return self.name.strip().split(maxsplit=1)[0] if self.name.strip() else ""
     
     def __str__(self):
         return self.name

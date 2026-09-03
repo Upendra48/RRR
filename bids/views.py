@@ -16,8 +16,8 @@ def monitor(request):
 
     if q:
         bids = bids.filter(
-        Q(agency_name__icontains=q) |
-        Q(ecgains__icontains=q)
+        Q(ecgains__icontains=q) |
+        Q(developer__name__istartswith=q)
         )
 
     if priority:
