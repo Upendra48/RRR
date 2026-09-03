@@ -4,6 +4,43 @@
 
 {% block content %}
 
+{% if not bids and not query and not selected_priority %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var toast = document.createElement("div");
+        toast.textContent = "No bid repair requests found in the monitor.";
+        toast.style.cssText = [
+            "position:fixed",
+            "top:16px",
+            "left:50%",
+            "transform:translateX(-50%)",
+            "z-index:2147483647",
+            "font-family:Arial, Helvetica, sans-serif",
+            "font-size:12px",
+            "font-weight:bold",
+            "color:#333333",
+            "background-color:#FFFF00",
+            "border:1px solid #777777",
+            "border-radius:4px",
+            "box-shadow:0 2px 8px rgba(0,0,0,0.25)",
+            "padding:8px 18px",
+            "opacity:1",
+            "transition:opacity 0.6s ease"
+        ].join(";");
+
+        document.body.appendChild(toast);
+
+        setTimeout(function () {
+            toast.style.opacity = "0";
+        }, 3000);
+
+        toast.addEventListener("transitionend", function () {
+            toast.remove();
+        });
+    });
+</script>
+{% endif %}
+
 <div class="container-fluid py-4">
 
     <!-- =====================================================
@@ -207,18 +244,45 @@
 
                         <td colspan="7" class="text-center py-5">
 
-                            <h5 class="mb-2">
-                                No bid repair requests found.
-                            </h5>
+                            {% if query or selected_priority %}
 
-                            <p class="text-muted mb-3">
-                                There are currently no requests in the monitor.
-                            </p>
+                                <h5 class="mb-2">
+                                    No matching bid requests found.
+                                </h5>
 
-                            <a href="{% url 'create_bid' %}"
-                               class="btn btn-primary">
-                                Create First Request
-                            </a>
+                                <p class="text-muted mb-3">
+                                    {% if query and selected_priority %}
+                                        No bid with ECGAINS or Agency Name matching
+                                        &ldquo;{{ query }}&rdquo; and Priority &ldquo;{{ selected_priority }}&rdquo; was found.
+                                    {% elif query %}
+                                        No bid with ECGAINS or Agency Name matching
+                                        &ldquo;{{ query }}&rdquo; was found.
+                                    {% else %}
+                                        No bid with Priority &ldquo;{{ selected_priority }}&rdquo; was found.
+                                    {% endif %}
+                                </p>
+
+                                <a href="{% url 'monitor' %}"
+                                   class="pill-btn reset-pill">
+                                    Clear Filters
+                                </a>
+
+                            {% else %}
+
+                                <h5 class="mb-2">
+                                    No bid repair requests found.
+                                </h5>
+
+                                <p class="text-muted mb-3">
+                                    There are currently no requests in the monitor.
+                                </p>
+
+                                <a href="{% url 'create_bid' %}"
+                                   class="btn btn-primary">
+                                    Create First Request
+                                </a>
+
+                            {% endif %}
 
                         </td>
 
