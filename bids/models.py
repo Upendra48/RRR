@@ -40,13 +40,13 @@ class Bid(models.Model):
     
     developer = models.ForeignKey(Developer, on_delete=models.PROTECT, related_name='bids')
     
-    bid_type = models.CharField(max_length=20, choices=BidType.choices)
+    bid_type = models.CharField(max_length=20, choices=BidType.choices, default=BidType.NEW)
     
     priority = models.CharField(max_length=20, choices=Priority.choices, default=Priority.NORMAL)
     
     has_bids = models.BooleanField(default=False)
     
-    procurement_type = models.CharField(max_length=50, choices=ProcurementType.choices,) 
+    procurement_type = models.CharField(max_length=50, choices=ProcurementType.choices, default=ProcurementType.PROCUREMENT_SPIDER)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
