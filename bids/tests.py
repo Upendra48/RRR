@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Bid, Developer
+from .models import ArchivedBid, Bid, Developer
 
 
 class BidFeatureTests(TestCase):
@@ -60,3 +60,15 @@ class BidFeatureTests(TestCase):
 
         self.assertContains(response, "Alpha Agency")
         self.assertNotContains(response, "Beta Agency")
+
+    def test_delete_archives_bid_before_removing_it(self):
+        bid = self._make_bid()
+
+        response = self.client.post(reverse("delete_bid", args=[bid.ecgains]))
+
+        self.assertRedirects(response, reverse("monitor"))
+        self.assertFalse(Bid.objects.filter(pk=bid.pk).exists())
+        archived_bid = ArchivedBid.objects.get(original_bid_id=bid.pk)
+        self.assertEqual(archived_bid.ecgains, bid.ecgains)
+        self.assertEqual(archived_bid.agency_name, bid.agency_name)
+        self.assertEqual(archived_bid.developer_name, self.developer.name)

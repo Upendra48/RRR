@@ -53,3 +53,31 @@ class Bid(models.Model):
     
     def __str__(self):
         return f"{self.agency_name} - {self.ecgains}"          
+
+
+class ArchivedBid(models.Model):
+    original_bid_id = models.PositiveBigIntegerField()
+    agency_name = models.CharField(max_length=255)
+    ecgains = models.CharField(max_length=100)
+    contact_email = models.EmailField()
+    state = models.CharField(max_length=100)
+    initials = models.CharField(max_length=20)
+    date = models.DateField()
+    bid_url = models.URLField(max_length=1000)
+    comments = models.TextField(blank=True)
+    module_name = models.CharField(max_length=255, blank=True)
+    developer_name = models.CharField(max_length=100)
+    bid_type = models.CharField(max_length=20)
+    priority = models.CharField(max_length=20)
+    has_bids = models.BooleanField(default=False)
+    procurement_type = models.CharField(max_length=50)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
+    deleted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "archive"
+        ordering = ("-deleted_at", "-id")
+
+    def __str__(self):
+        return f"{self.agency_name} - {self.ecgains}"

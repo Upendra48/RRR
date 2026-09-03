@@ -1,8 +1,9 @@
 from django.contrib import messages
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import BidForm, BidUpdateForm
-from .models import Bid
+from .models import ArchivedBid, Bid
 from django.db.models import Q
 
 
@@ -98,7 +99,27 @@ def delete_bid(request, ecgains):
     bid = get_object_or_404(Bid, ecgains=ecgains)
 
     if request.method == "POST":
-        bid.delete()
+        with transaction.atomic():
+            ArchivedBid.objects.create(
+                original_bid_id=bid.pk,
+                agency_name=bid.agency_name,
+                ecgains=bid.ecgains,
+                contact_email=bid.contact_email,
+                state=bid.state,
+                initials=bid.initials,
+                date=bid.date,
+                bid_url=bid.bid_url,
+                comments=bid.comments,
+                module_name=bid.module_name,
+                developer_name=bid.developer.name,
+                bid_type=bid.bid_type,
+                priority=bid.priority,
+                has_bids=bid.has_bids,
+                procurement_type=bid.procurement_type,
+                created_at=bid.created_at,
+                updated_at=bid.updated_at,
+            )
+            bid.delete()
         messages.success(request, "Bid request deleted successfully.")
         return redirect("monitor")
 
