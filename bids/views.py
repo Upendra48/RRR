@@ -3,9 +3,11 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import BidForm, BidUpdateForm
-from .models import ArchivedBid, Bid
+from .models import Agency, ArchivedBid, Bid
 from django.db.models import Q
+from django.http import JsonResponse
 
+from .models import Agency, Bid
 
 def monitor(request):
     show_current_bids = request.GET.get("has_bids") == "true"
@@ -130,3 +132,30 @@ def delete_bid(request, ecgains):
             "bid": bid,
         },
     )
+    
+    
+def agency_autocomplete(request):
+    query = request.GET.get("q", "").strip()
+    
+    if len(query) <2:
+        return JsonResponse([], safe = False)
+    
+    agencies = (
+        Agency.objects
+        .filter(
+            name__isnull=False,
+            name__icontains=query
+        )
+        .order_by("name")[:10]
+    )
+    
+    results = [
+        {
+            "id": agency.id,
+            "name": agency.name.strip()
+        }
+        for agency in agencies
+    ]
+    
+    return JsonResponse(results, safe=False)
+    

@@ -50,4 +50,10 @@ urlpatterns = [
         views.delete_bid,
         name="delete_bid",
     ),
+    
+    path(
+        "agencies/",
+        views.agency_autocomplete,
+        name="agency_autocomplete",
+    )
 ]

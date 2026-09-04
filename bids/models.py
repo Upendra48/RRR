@@ -85,3 +85,15 @@ class ArchivedBid(models.Model):
 
     def __str__(self):
         return f"{self.agency_name} - {self.ecgains}"
+    
+    
+class Agency(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, null=True, blank=True)
+    
+    class Meta:
+        db_table = "agencies"
+        managed = False  # This model is not managed by Django migrations
+        
+    def __str__(self):
+        return self.name or ""

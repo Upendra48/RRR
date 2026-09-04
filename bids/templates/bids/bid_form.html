@@ -42,9 +42,22 @@
                                     <div class="detail-value-locked">{{ form.instance.agency_name }}</div>
                                     <input type="hidden" name="{{ form.agency_name.html_name }}" value="{{ form.agency_name.value }}">
                                 {% else %}
-                                    {{ form.agency_name }}
-                                    {% if form.agency_name.errors %}<div class="text-danger small">{{ form.agency_name.errors }}</div>{% endif %}
-                                {% endif %}
+    <div class="position-relative">
+        {{ form.agency_name }}
+
+        <div
+            id="agencySuggestions"
+            class="list-group position-absolute w-100"
+            style="z-index: 1000;"
+        ></div>
+    </div>
+
+    {% if form.agency_name.errors %}
+        <div class="text-danger small">
+            {{ form.agency_name.errors }}
+        </div>
+    {% endif %}
+{% endif %}
                             </div>
 
                             <div class="legacy-cell-label">State:</div>
@@ -383,4 +396,81 @@
 
 </style>
 
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const agencyInput = document.getElementById("id_agency_name");
+    const suggestions = document.getElementById("agencySuggestions");
+
+    if (!agencyInput || !suggestions) {
+        return;
+    }
+
+    let debounceTimer;
+
+    agencyInput.addEventListener("input", function () {
+        clearTimeout(debounceTimer);
+
+        const query = this.value.trim();
+
+        suggestions.innerHTML = "";
+
+        if (query.length < 2) {
+            return;
+        }
+
+        debounceTimer = setTimeout(function () {
+            fetch(
+                "{% url 'agency_autocomplete' %}?q=" +
+                encodeURIComponent(query)
+            )
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch agencies.");
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    suggestions.innerHTML = "";
+
+                    data.forEach(function (agency) {
+                        const item = document.createElement("button");
+
+                        item.type = "button";
+                        item.className =
+                            "list-group-item list-group-item-action";
+
+                        item.textContent = agency.name;
+
+                        item.addEventListener("click", function () {
+                            agencyInput.value = agency.name;
+                            suggestions.innerHTML = "";
+                        });
+
+                        suggestions.appendChild(item);
+                    });
+                })
+                .catch(error => {
+                    console.error(
+                        "Agency autocomplete error:",
+                        error
+                    );
+                });
+        }, 300);
+    });
+
+    document.addEventListener("click", function (event) {
+        if (
+            event.target !== agencyInput &&
+            !suggestions.contains(event.target)
+        ) {
+            suggestions.innerHTML = "";
+        }
+    });
+});
+</script>
 {% endblock %}
