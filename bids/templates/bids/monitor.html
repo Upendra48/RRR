@@ -5,10 +5,14 @@
 {% block content %}
 
 {% if not bids and not query and not selected_priority %}
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+
         var toast = document.createElement("div");
+
         toast.textContent = "No bid repair requests found in the monitor.";
+
         toast.style.cssText = [
             "position:fixed",
             "top:16px",
@@ -37,55 +41,91 @@
         toast.addEventListener("transitionend", function () {
             toast.remove();
         });
+
     });
 </script>
+
 {% endif %}
+
 
 <div class="container-fluid py-4">
 
     <!-- =====================================================
          COMBINED TITLE + FILTER TOOLBAR
          ===================================================== -->
+
     <div class="monitor-toolbar mb-3">
 
         <!-- Title strip -->
         <div class="toolbar-title-bar">
 
             <div class="toolbar-title-text">
-                <span class="toolbar-title-main">OPEN REPAIR REQUESTS</span>
-                <span class="toolbar-title-sub">Monitor and manage repair requests</span>
+
+                <span class="toolbar-title-main">
+                    OPEN REPAIR REQUESTS
+                </span>
+
+                <span class="toolbar-title-sub">
+                    Monitor and manage repair requests
+                </span>
+
             </div>
 
-            <a href="{% url 'create_bid' %}" class="pill-btn new-request-pill">
+            <a
+                href="{% url 'create_bid' %}"
+                class="pill-btn new-request-pill"
+            >
                 + NEW REQUEST
             </a>
 
         </div>
 
 
-        <!-- Single filter form: mode + search + priority all submit together -->
+        <!-- Single filter form -->
         <form method="get" class="toolbar-filter-row">
 
+            <!-- Monitoring / Has Current Bids -->
             <div class="mode-toggle">
 
                 <label class="mode-pill {% if not show_current_bids %}active{% endif %}">
-                    <input type="radio" name="has_bids" value=""
-                           {% if not show_current_bids %}checked{% endif %}
-                           onchange="this.form.submit()">
+
+                    <input
+                        type="radio"
+                        name="has_bids"
+                        value=""
+                        {% if not show_current_bids %}checked{% endif %}
+                        onchange="this.form.submit()"
+                    >
+
                     Monitoring
+
                 </label>
 
+
                 <label class="mode-pill {% if show_current_bids %}active{% endif %}">
-                    <input type="radio" name="has_bids" value="true"
-                           {% if show_current_bids %}checked{% endif %}
-                           onchange="this.form.submit()">
+
+                    <input
+                        type="radio"
+                        name="has_bids"
+                        value="true"
+                        {% if show_current_bids %}checked{% endif %}
+                        onchange="this.form.submit()"
+                    >
+
                     Has Current Bids
+
                 </label>
 
             </div>
 
+
+            <!-- Search -->
             <div class="toolbar-search">
-                <span class="search-symbol">⌕</span>
+
+                <span class="search-symbol">
+                    ⌕
+                </span>
+
                 <input
                     id="searchInput"
                     type="text"
@@ -94,19 +134,52 @@
                     class="toolbar-input search-input"
                     placeholder="ECGAINS or Developer First Name"
                 >
+
             </div>
 
-            <select id="priorityFilter" name="priority" class="toolbar-input toolbar-select">
-                <option value="">All Priorities</option>
-                <option value="High" {% if selected_priority == 'High' %}selected{% endif %}>High</option>
-                <option value="Normal" {% if selected_priority == 'Normal' %}selected{% endif %}>Normal</option>
+
+            <!-- Priority -->
+            <select
+                id="priorityFilter"
+                name="priority"
+                class="toolbar-input toolbar-select"
+            >
+
+                <option value="">
+                    All Priorities
+                </option>
+
+                <option
+                    value="High"
+                    {% if selected_priority == 'High' %}selected{% endif %}
+                >
+                    High
+                </option>
+
+                <option
+                    value="Normal"
+                    {% if selected_priority == 'Normal' %}selected{% endif %}
+                >
+                    Normal
+                </option>
+
             </select>
 
-            <button type="submit" class="pill-btn apply-pill">
+
+            <!-- Apply -->
+            <button
+                type="submit"
+                class="pill-btn apply-pill"
+            >
                 APPLY
             </button>
 
-            <a href="{% url 'monitor' %}" class="pill-btn reset-pill">
+
+            <!-- Reset -->
+            <a
+                href="{% url 'monitor' %}"
+                class="pill-btn reset-pill"
+            >
                 RESET
             </a>
 
@@ -115,143 +188,229 @@
     </div>
 
 
-    <!-- Monitor Table -->
+
+    <!-- =====================================================
+         MONITOR TABLE
+         ===================================================== -->
+
     <div class="table-responsive">
 
         <table class="table table-sm align-middle monitor-table">
 
             <thead>
+
                 <tr>
-                    <th class="col-ecgains">ECGAINS:</th>
-                    <th class="col-agency">Agency Name:</th>
-                    <th class="col-developer">Developer:</th>
-                    <th class="col-date">Date:</th>
-                    <th class="col-type">Procurement Type:</th>
-                    <th class="col-hasbid text-center">Has Bid:</th>
-                    <th class="col-url text-center">URL:</th>
-                    <th class="col-action text-center">View/Update:</th>
+
+                    <th class="col-ecgains">
+                        ECGAINS:
+                    </th>
+
+                    <th class="col-agency">
+                        Agency Name:
+                    </th>
+
+                    <th class="col-developer">
+                        Developer:
+                    </th>
+
+                    <th class="col-date">
+                        Date:
+                    </th>
+
+                    <th class="col-type">
+                        Procurement Type:
+                    </th>
+
+                    <th class="col-hasbid text-center">
+                        Has Bid:
+                    </th>
+
+                    <th class="col-url text-center">
+                        URL:
+                    </th>
+
+                    <th class="col-action text-center">
+                        View/Update:
+                    </th>
+
                 </tr>
+
             </thead>
 
 
             <tbody>
 
-                {% if bids %}
+                {% if developer_groups %}
 
-                    {% for bid in bids %}
+                    <!-- =================================================
+                         DEVELOPER GROUPS
+                         ================================================= -->
 
-                    <tr
-                        {% if bid.priority == "High" %}
-                            class="priority-high"
-                        {% elif forloop.counter0|divisibleby:2 %}
-                            class="row-alt-a"
-                        {% else %}
-                            class="row-alt-b"
-                        {% endif %}
-                    >
+                    {% for developer_name, developer_bids in developer_groups %}
 
-                        <!-- ECGAINS -->
-                        <td class="col-ecgains">
-                            <a href="{% url 'bid_detail' bid.ecgains %}"
-                               class="ecgains-link">
-                                {{ bid.ecgains }}
-                            </a>
-                        </td>
+                        <!-- Developer Group Header -->
+                        <tr class="developer-group-header">
+
+                            <td colspan="8">
+                                Developer: {{ developer_name }}
+                            </td>
+
+                        </tr>
 
 
-                        <!-- Agency -->
-                        <td class="col-agency">
-                            <span class="agency-name">{{ bid.agency_name }}</span>
-                        </td>
+                        <!-- =================================================
+                             BIDS FOR THIS DEVELOPER
+                             ================================================= -->
 
+                        {% for bid in developer_bids %}
 
-                        <!-- Developer -->
-                        <td class="col-developer">
-                            <span class="developer-name">
-                                {% if bid.developer %}
-                                    {{ bid.developer.first_name }}
+                            <tr
+                                {% if bid.priority == "High" %}
+                                    class="priority-high"
+                                {% elif forloop.counter0|divisibleby:2 %}
+                                    class="row-alt-a"
                                 {% else %}
-                                    <span class="text-muted">&mdash;</span>
+                                    class="row-alt-b"
                                 {% endif %}
-                            </span>
-                        </td>
+                            >
+
+                                <!-- ECGAINS -->
+                                <td class="col-ecgains">
+
+                                    <a
+                                        href="{% url 'bid_detail' bid.ecgains %}"
+                                        class="ecgains-link"
+                                    >
+                                        {{ bid.ecgains }}
+                                    </a>
+
+                                </td>
 
 
-                        <!-- Date -->
-                        <td class="col-date">
-                            {{ bid.date|date:"m/d/Y" }}
-                        </td>
+                                <!-- Agency -->
+                                <td class="col-agency">
+
+                                    <span class="agency-name">
+                                        {{ bid.agency_name }}
+                                    </span>
+
+                                </td>
 
 
-                        <!-- Type -->
-                        <td class="col-type">
-                            {{ bid.get_procurement_type_display }}
-                        </td>
+                                <!-- Developer -->
+                                <td class="col-developer">
+
+                                    <span class="developer-name">
+
+                                        {% if bid.developer %}
+
+                                            {{ bid.developer.first_name }}
+
+                                        {% else %}
+
+                                            <span class="text-muted">
+                                                &mdash;
+                                            </span>
+
+                                        {% endif %}
+
+                                    </span>
+
+                                </td>
 
 
-                        <!-- Has Bid -->
-                        <td class="col-hasbid text-center">
+                                <!-- Date -->
+                                <td class="col-date">
 
-                            {% if bid.has_bids %}
+                                    {{ bid.date|date:"m/d/Y" }}
 
-                                <span class="has-bid">
-                                    Yes
-                                </span>
-
-                            {% else %}
-
-                                <span class="no-bid">
-                                    No
-                                </span>
-
-                            {% endif %}
-
-                        </td>
+                                </td>
 
 
-                        <!-- URL -->
-                        <td class="col-url text-center">
+                                <!-- Procurement Type -->
+                                <td class="col-type">
 
-                            {% if bid.bid_url %}
+                                    {{ bid.get_procurement_type_display }}
 
-                                <a href="{{ bid.bid_url }}"
-                                   target="_blank"
-                                   rel="noopener noreferrer"
-                                   class="bid-url">
-                                    URL
-                                </a>
-
-                            {% else %}
-
-                                <span class="text-muted">
-                                    &mdash;
-                                </span>
-
-                            {% endif %}
-
-                        </td>
+                                </td>
 
 
-                        <!-- View / Update -->
-                        <td class="col-action text-center">
+                                <!-- Has Bid -->
+                                <td class="col-hasbid text-center">
 
-                            <a href="{% url 'bid_detail' bid.ecgains %}"
-                               class="update-btn">
-                                UPDATE
-                            </a>
+                                    {% if bid.has_bids %}
 
-                        </td>
+                                        <span class="has-bid">
+                                            Yes
+                                        </span>
 
-                    </tr>
+                                    {% else %}
+
+                                        <span class="no-bid">
+                                            No
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- URL -->
+                                <td class="col-url text-center">
+
+                                    {% if bid.bid_url %}
+
+                                        <a
+                                            href="{{ bid.bid_url }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="bid-url"
+                                        >
+                                            URL
+                                        </a>
+
+                                    {% else %}
+
+                                        <span class="text-muted">
+                                            &mdash;
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- View / Update -->
+                                <td class="col-action text-center">
+
+                                    <a
+                                        href="{% url 'bid_detail' bid.ecgains %}"
+                                        class="update-btn"
+                                    >
+                                        UPDATE
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
 
                     {% endfor %}
 
+
                 {% else %}
 
-                    <!-- No Requests -->
+                    <!-- =================================================
+                         NO REQUESTS
+                         ================================================= -->
+
                     <tr>
 
-                        <td colspan="8" class="text-center py-5">
+                        <td
+                            colspan="8"
+                            class="text-center py-5"
+                        >
 
                             {% if query or selected_priority %}
 
@@ -259,22 +418,43 @@
                                     No matching bid requests found.
                                 </h5>
 
+
                                 <p class="text-muted mb-3">
+
                                     {% if query and selected_priority %}
-                                        No bid with ECGAINS or Developer First Name matching
-                                        &ldquo;{{ query }}&rdquo; and Priority &ldquo;{{ selected_priority }}&rdquo; was found.
+
+                                        No bid with ECGAINS or Developer First Name
+                                        matching
+                                        &ldquo;{{ query }}&rdquo;
+                                        and Priority
+                                        &ldquo;{{ selected_priority }}&rdquo;
+                                        was found.
+
                                     {% elif query %}
-                                        No bid with ECGAINS or Developer First Name matching
-                                        &ldquo;{{ query }}&rdquo; was found.
+
+                                        No bid with ECGAINS or Developer First Name
+                                        matching
+                                        &ldquo;{{ query }}&rdquo;
+                                        was found.
+
                                     {% else %}
-                                        No bid with Priority &ldquo;{{ selected_priority }}&rdquo; was found.
+
+                                        No bid with Priority
+                                        &ldquo;{{ selected_priority }}&rdquo;
+                                        was found.
+
                                     {% endif %}
+
                                 </p>
 
-                                <a href="{% url 'monitor' %}"
-                                   class="pill-btn reset-pill">
+
+                                <a
+                                    href="{% url 'monitor' %}"
+                                    class="pill-btn reset-pill"
+                                >
                                     Clear Filters
                                 </a>
+
 
                             {% else %}
 
@@ -285,11 +465,6 @@
                                 <p class="text-muted mb-3">
                                     There are currently no requests in the monitor.
                                 </p>
-
-                                <!-- <a href="{% url 'create_bid' %}"
-                                   class="btn btn-primary">
-                                    Create First Request
-                                </a> -->
 
                             {% endif %}
 
@@ -310,364 +485,694 @@
 {% endblock %}
 
 
+
 {% block extra_css %}
 
 <style>
 
     /* =========================================================
-       COMBINED TITLE + FILTER TOOLBAR — same beige/gray/Arial
-       theme as the table below, instead of a separate white card
+       COMBINED TITLE + FILTER TOOLBAR
        ========================================================= */
 
     .monitor-toolbar {
+
         width: 95%;
         margin: 0 auto;
+
         font-family: Arial, Helvetica, sans-serif;
+
         background-color: beige;
+
         border: 1px solid #777777;
+
     }
 
 
-    /* Title strip — same gray as the table header */
+    /* Title strip */
+
     .toolbar-title-bar {
+
         display: flex;
+
         align-items: center;
+
         justify-content: space-between;
+
         gap: 16px;
+
         padding: 8px 14px;
+
         background-color: #808080;
+
         border-bottom: 1px solid #777777;
+
     }
+
 
     .toolbar-title-text {
+
         display: flex;
+
         flex-direction: column;
+
         line-height: 1.3;
+
     }
+
 
     .toolbar-title-main {
+
         color: #ffffff;
+
         font-size: 13px;
+
         font-weight: bold;
+
         letter-spacing: 0.5px;
+
     }
+
 
     .toolbar-title-sub {
+
         color: #e6e6e6;
+
         font-size: 11px;
+
     }
 
 
-    /* Filter row — compact single line, wraps on small screens */
+    /* Filter row */
+
     .toolbar-filter-row {
+
         display: flex;
+
         align-items: center;
+
         flex-wrap: wrap;
+
         gap: 8px;
+
         padding: 8px 14px;
+
     }
 
 
-    /* Monitoring / Has Current Bids — pill radio group */
+    /* Monitoring / Has Current Bids */
+
     .mode-toggle {
+
         display: inline-flex;
+
         border: 1px solid #3d6ea5;
+
         border-radius: 10px;
+
         overflow: hidden;
+
     }
+
 
     .mode-pill {
+
         display: inline-flex;
+
         align-items: center;
+
         padding: 4px 12px;
+
         background-color: #ffffff;
+
         color: #08306b;
+
         font-size: 11px;
+
         font-weight: bold;
+
         cursor: pointer;
+
         white-space: nowrap;
+
         border-right: 1px solid #3d6ea5;
+
     }
+
 
     .mode-pill:last-child {
+
         border-right: none;
+
     }
+
 
     .mode-pill input {
+
         display: none;
+
     }
+
 
     .mode-pill.active {
-        background: linear-gradient(#eaf4ff, #bcdcfa 45%, #7fb8ec);
+
+        background: linear-gradient(
+            #eaf4ff,
+            #bcdcfa 45%,
+            #7fb8ec
+        );
+
     }
 
+
     .mode-pill:hover {
+
         background-color: #eaf4ff;
+
     }
 
 
     /* Search box */
+
     .toolbar-search {
+
         position: relative;
+
         flex: 1;
+
         min-width: 160px;
+
         max-width: 320px;
+
     }
+
 
     .search-symbol {
+
         position: absolute;
+
         left: 8px;
+
         top: 50%;
+
         transform: translateY(-50%);
+
         color: #777777;
+
         font-size: 15px;
+
         pointer-events: none;
+
     }
+
 
     .search-input {
+
         padding-left: 26px !important;
+
     }
 
 
-    /* Inputs — match the plain white bordered legacy field style */
+    /* Inputs */
+
     .toolbar-input {
+
         font-family: Arial, Helvetica, sans-serif;
+
         font-size: 12px;
+
         font-weight: bold;
+
         color: #000000;
+
         background-color: #ffffff;
+
         border: 1px solid #777777;
+
         border-radius: 0;
+
         padding: 4px 7px;
+
         width: 100%;
+
     }
+
 
     .toolbar-select {
+
         width: auto;
+
         min-width: 140px;
+
     }
+
 
     .toolbar-input:focus {
+
         outline: none;
+
         border-color: #000000;
+
         background-color: #ffffcc;
+
     }
 
 
-    /* Pill buttons — same blue-gradient capsule used throughout the page */
+    /* Pill buttons */
+
     .pill-btn {
+
         display: inline-flex;
+
         align-items: center;
+
         justify-content: center;
-        background: linear-gradient(#eaf4ff, #bcdcfa 45%, #7fb8ec);
+
+        background: linear-gradient(
+            #eaf4ff,
+            #bcdcfa 45%,
+            #7fb8ec
+        );
+
         border: 1px solid #3d6ea5;
+
         border-radius: 10px;
+
         color: #08306b;
+
         font-size: 11px;
+
         font-weight: bold;
+
         text-decoration: none;
+
         white-space: nowrap;
+
         padding: 4px 14px;
+
         cursor: pointer;
+
     }
+
 
     .pill-btn:hover {
-        background: linear-gradient(#dcecfb, #a8cdf2 45%, #6ba7de);
+
+        background: linear-gradient(
+            #dcecfb,
+            #a8cdf2 45%,
+            #6ba7de
+        );
+
         color: #08306b;
+
     }
+
 
     .reset-pill {
-        background: linear-gradient(#f5f5f5, #e0e0e0 45%, #c9c9c9);
+
+        background: linear-gradient(
+            #f5f5f5,
+            #e0e0e0 45%,
+            #c9c9c9
+        );
+
         border: 1px solid #999999;
+
         color: #333333;
+
     }
 
+
     .reset-pill:hover {
-        background: linear-gradient(#e8e8e8, #cfcfcf 45%, #b8b8b8);
+
+        background: linear-gradient(
+            #e8e8e8,
+            #cfcfcf 45%,
+            #b8b8b8
+        );
+
         color: #222222;
+
     }
 
 
     /* Responsive */
+
     @media (max-width: 768px) {
 
         .toolbar-title-bar {
+
             flex-direction: column;
+
             align-items: flex-start;
+
         }
 
+
         .toolbar-filter-row {
+
             flex-direction: column;
+
             align-items: stretch;
+
         }
+
 
         .toolbar-search,
         .toolbar-select,
         .mode-toggle {
+
             max-width: none;
+
             width: 100%;
+
         }
 
+
         .mode-pill {
+
             flex: 1;
+
             justify-content: center;
+
         }
 
     }
+
 
 
     /* =========================================================
        MONITOR TABLE
        ========================================================= */
 
-    /* Font base — matches legacy Prime Vendor look */
     .monitor-table,
     .monitor-table * {
+
         font-family: Arial, Helvetica, sans-serif;
+
     }
 
 
-    /* Main monitor table — borderless, flush rows like the legacy screen */
+    /* Main monitor table */
+
     .monitor-table {
+
         width: 95%;
+
         margin: 0 auto;
+
         background-color: beige;
+
         font-size: 12px;
+
         border-collapse: collapse;
+
         border: none;
+
     }
 
 
-    /* Table header — legacy gray bar, white bold labels */
+    /* Table header */
+
     .monitor-table thead th {
+
         background-color: #808080;
+
         color: #ffffff;
+
         font-size: 12px;
+
         font-weight: bold;
+
         border: none;
+
         white-space: nowrap;
+
         vertical-align: middle;
+
         padding: 6px 10px;
+
     }
 
 
-    /* Table cells — no borders, tight legacy row padding */
+    /* Table cells */
+
     .monitor-table tbody td {
+
         padding: 4px 10px;
+
         border: none;
+
         vertical-align: middle;
+
         font-size: 12px;
+
         font-weight: bold;
+
         color: #000000;
+
     }
+
 
     .monitor-table tbody tr {
+
         border: none;
+
     }
 
 
-    /* Column widths, matching the legacy proportions
-       (8 columns now that Developer is included) */
-    .col-ecgains   { width: 14%; white-space: nowrap; }
-    .col-agency    { width: 30%; }
-    .col-developer { width: 13%; white-space: nowrap; }
-    .col-date      { width: 9%;  white-space: nowrap; }
-    .col-type      { width: 9%;  white-space: nowrap; }
-    .col-hasbid    { width: 7%;  white-space: nowrap; }
-    .col-url       { width: 7%;  white-space: nowrap; }
-    .col-action    { width: 11%; white-space: nowrap; }
+    /* =========================================================
+       DEVELOPER GROUP HEADER
+       ========================================================= */
+
+    .monitor-table tbody tr.developer-group-header {
+
+        background-color: #808080;
+
+    }
+
+
+    .monitor-table tbody tr.developer-group-header td {
+
+        color: #020202;
+
+        font-size: 12px;
+
+        font-weight: bold;
+
+        padding: 5px 10px;
+
+        border: none;
+
+    }
+
+
+    /* Column widths */
+
+    .col-ecgains {
+        width: 14%;
+        white-space: nowrap;
+    }
+
+
+    .col-agency {
+        width: 30%;
+    }
+
+
+    .col-developer {
+        width: 13%;
+        white-space: nowrap;
+    }
+
+
+    .col-date {
+        width: 9%;
+        white-space: nowrap;
+    }
+
+
+    .col-type {
+        width: 9%;
+        white-space: nowrap;
+    }
+
+
+    .col-hasbid {
+        width: 7%;
+        white-space: nowrap;
+    }
+
+
+    .col-url {
+        width: 7%;
+        white-space: nowrap;
+    }
+
+
+    .col-action {
+        width: 11%;
+        white-space: nowrap;
+    }
 
 
     /* Alternating rows */
+
     .monitor-table tbody tr.row-alt-a {
+
         background-color: beige;
+
     }
+
 
     .monitor-table tbody tr.row-alt-b {
+
         background-color: whitesmoke;
+
     }
 
 
-    /* Priority rows — only High exists on the model, no Medium tier */
+    /* Priority rows */
+
     .monitor-table tbody tr.priority-high {
+
         background-color: #FFA500 !important;
+
     }
 
 
     /* Row hover */
+
     .monitor-table tbody tr:hover {
+
         background-color: yellow !important;
+
     }
 
 
     /* ECGAINS link */
+
     .ecgains-link {
+
         color: #8b0000;
+
         font-weight: bold;
+
         text-decoration: none;
+
         white-space: nowrap;
+
     }
 
+
     .ecgains-link:hover {
+
         text-decoration: underline;
+
     }
 
 
     /* Agency name */
+
     .agency-name {
+
         color: #8b0000;
+
         font-weight: bold;
+
     }
 
 
     /* Developer name */
+
     .developer-name {
+
         color: #000000;
+
         font-weight: bold;
+
     }
 
 
     /* Bid URL */
+
     .bid-url {
+
         color: #000000;
+
         font-weight: bold;
+
         text-decoration: underline;
+
     }
 
 
-    /* Has Bid — not a real link, so no underline */
+    /* Has Bid */
+
     .has-bid {
+
         color: #000000;
+
         font-weight: bold;
+
         text-decoration: none;
+
         white-space: nowrap;
+
     }
 
 
     /* No Bid */
+
     .no-bid {
+
         color: #555555;
+
         font-weight: normal;
+
     }
 
 
     /* Update pill button */
+
     .update-btn {
+
         display: inline-block;
-        background: linear-gradient(#eaf4ff, #bcdcfa 45%, #7fb8ec);
+
+        background: linear-gradient(
+            #eaf4ff,
+            #bcdcfa 45%,
+            #7fb8ec
+        );
+
         border: 1px solid #3d6ea5;
+
         border-radius: 10px;
+
         color: #08306b;
+
         font-size: 11px;
+
         font-weight: bold;
+
         text-decoration: none;
+
         white-space: nowrap;
+
         padding: 2px 14px;
+
     }
 
+
     .update-btn:hover {
-        background: linear-gradient(#dcecfb, #a8cdf2 45%, #6ba7de);
+
+        background: linear-gradient(
+            #dcecfb,
+            #a8cdf2 45%,
+            #6ba7de
+        );
+
         color: #08306b;
+
     }
 
 </style>

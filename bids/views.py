@@ -6,7 +6,7 @@ from .forms import BidForm, BidUpdateForm
 from .models import Agency, ArchivedBid, Bid
 from django.db.models import Q
 from django.http import JsonResponse
-
+from collections import OrderedDict
 from .models import Agency, Bid
 
 def monitor(request):
@@ -19,7 +19,7 @@ def monitor(request):
     if q:
         bids = bids.filter(
         Q(ecgains__icontains=q) |
-        Q(developer__name__istartswith=q)
+        Q(developer__name__icontains=q)
         )
 
     if priority:
@@ -27,12 +27,26 @@ def monitor(request):
 
     if show_current_bids:
         bids = bids.filter(has_bids=True)
+        
+    developer_groups = OrderedDict()
+    
+    for bid in bids:
+        developer_name = (
+            bid.developer.name.strip() 
+            if bid.developer 
+            else "Unassigned")
+        
+        if developer_name not in developer_groups:
+            developer_groups[developer_name] = []
+            
+        developer_groups[developer_name].append(bid)
 
     return render(
         request,
         "bids/monitor.html",
         {
             "bids": bids,
+            "developer_groups": developer_groups.items(),
             "show_current_bids": show_current_bids,
             "query": q,
             "selected_priority": priority,
