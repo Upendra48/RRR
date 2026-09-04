@@ -20,6 +20,7 @@ class Bid(models.Model):
     class Priority(models.TextChoices):
         HIGH = "High",
         NORMAL = "Normal",
+        CRITICAL = "Critical"
         
     class ProcurementType(models.TextChoices):
         PROCUREMENT_SPIDER = "Procurement Spider",

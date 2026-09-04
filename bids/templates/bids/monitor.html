@@ -8,7 +8,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-
         var toast = document.createElement("div");
 
         toast.textContent = "No bid repair requests found in the monitor.";
@@ -41,7 +40,6 @@
         toast.addEventListener("transitionend", function () {
             toast.remove();
         });
-
     });
 </script>
 
@@ -53,10 +51,10 @@
     <!-- =====================================================
          COMBINED TITLE + FILTER TOOLBAR
          ===================================================== -->
+<!--
+     <div class="monitor-toolbar mb-3">
 
-    <div class="monitor-toolbar mb-3">
-
-        <!-- Title strip -->
+        Title strip
         <div class="toolbar-title-bar">
 
             <div class="toolbar-title-text">
@@ -81,10 +79,10 @@
         </div>
 
 
-        <!-- Single filter form -->
+        Single filter form
         <form method="get" class="toolbar-filter-row">
 
-            <!-- Monitoring / Has Current Bids -->
+
             <div class="mode-toggle">
 
                 <label class="mode-pill {% if not show_current_bids %}active{% endif %}">
@@ -119,7 +117,7 @@
             </div>
 
 
-            <!-- Search -->
+            Search
             <div class="toolbar-search">
 
                 <span class="search-symbol">
@@ -138,7 +136,7 @@
             </div>
 
 
-            <!-- Priority -->
+             Priority 
             <select
                 id="priorityFilter"
                 name="priority"
@@ -149,24 +147,35 @@
                     All Priorities
                 </option>
 
-                <option
-                    value="High"
-                    {% if selected_priority == 'High' %}selected{% endif %}
-                >
-                    High
-                </option>
+                <optgroup label="Priority Levels">
 
-                <option
-                    value="Normal"
-                    {% if selected_priority == 'Normal' %}selected{% endif %}
-                >
-                    Normal
-                </option>
+                    <option
+                        value="Critical"
+                        {% if selected_priority == 'Critical' %}selected{% endif %}
+                    >
+                        Critical
+                    </option>
+
+                    <option
+                        value="High"
+                        {% if selected_priority == 'High' %}selected{% endif %}
+                    >
+                        High
+                    </option>
+
+                    <option
+                        value="Normal"
+                        {% if selected_priority == 'Normal' %}selected{% endif %}
+                    >
+                        Normal
+                    </option>
+
+                </optgroup>
 
             </select>
 
 
-            <!-- Apply -->
+             Apply 
             <button
                 type="submit"
                 class="pill-btn apply-pill"
@@ -175,7 +184,7 @@
             </button>
 
 
-            <!-- Reset -->
+            Reset
             <a
                 href="{% url 'monitor' %}"
                 class="pill-btn reset-pill"
@@ -186,8 +195,7 @@
         </form>
 
     </div>
-
-
+-->
 
     <!-- =====================================================
          MONITOR TABLE
@@ -209,9 +217,7 @@
                         Agency Name:
                     </th>
 
-                    <th class="col-developer">
-                        Developer:
-                    </th>
+                    <!-- Developer column removed -->
 
                     <th class="col-date">
                         Date:
@@ -230,7 +236,12 @@
                     </th>
 
                     <th class="col-action text-center">
-                        View/Update:
+                        <a
+                            href="{% url 'create_bid' %}"
+                            class="pill-btn new-request-pill"
+                        >
+                        NEW REQUEST    
+                        </a>
                     </th>
 
                 </tr>
@@ -251,7 +262,7 @@
                         <!-- Developer Group Header -->
                         <tr class="developer-group-header">
 
-                            <td colspan="8">
+                            <td colspan="7">
                                 Developer: {{ developer_name }}
                             </td>
 
@@ -265,7 +276,9 @@
                         {% for bid in developer_bids %}
 
                             <tr
-                                {% if bid.priority == "High" %}
+                                {% if bid.priority == "Critical" %}
+                                    class="priority-critical"
+                                {% elif bid.priority == "High" %}
                                     class="priority-high"
                                 {% elif forloop.counter0|divisibleby:2 %}
                                     class="row-alt-a"
@@ -297,41 +310,18 @@
                                 </td>
 
 
-                                <!-- Developer -->
-                                <td class="col-developer">
-
-                                    <span class="developer-name">
-
-                                        {% if bid.developer %}
-
-                                            {{ bid.developer.first_name }}
-
-                                        {% else %}
-
-                                            <span class="text-muted">
-                                                &mdash;
-                                            </span>
-
-                                        {% endif %}
-
-                                    </span>
-
-                                </td>
+                                <!-- Developer column removed -->
 
 
                                 <!-- Date -->
                                 <td class="col-date">
-
                                     {{ bid.date|date:"m/d/Y" }}
-
                                 </td>
 
 
                                 <!-- Procurement Type -->
                                 <td class="col-type">
-
                                     {{ bid.get_procurement_type_display }}
-
                                 </td>
 
 
@@ -408,7 +398,7 @@
                     <tr>
 
                         <td
-                            colspan="8"
+                            colspan="7"
                             class="text-center py-5"
                         >
 
@@ -485,7 +475,6 @@
 {% endblock %}
 
 
-
 {% block extra_css %}
 
 <style>
@@ -495,323 +484,212 @@
        ========================================================= */
 
     .monitor-toolbar {
-
         width: 95%;
         margin: 0 auto;
-
         font-family: Arial, Helvetica, sans-serif;
-
         background-color: beige;
-
         border: 1px solid #777777;
-
     }
 
 
     /* Title strip */
 
     .toolbar-title-bar {
-
         display: flex;
-
         align-items: center;
-
         justify-content: space-between;
-
         gap: 16px;
-
         padding: 8px 14px;
-
         background-color: #808080;
-
         border-bottom: 1px solid #777777;
-
     }
 
 
     .toolbar-title-text {
-
         display: flex;
-
         flex-direction: column;
-
         line-height: 1.3;
-
     }
 
 
     .toolbar-title-main {
-
         color: #ffffff;
-
         font-size: 13px;
-
         font-weight: bold;
-
         letter-spacing: 0.5px;
-
     }
 
 
     .toolbar-title-sub {
-
         color: #e6e6e6;
-
         font-size: 11px;
-
     }
 
 
     /* Filter row */
 
     .toolbar-filter-row {
-
         display: flex;
-
         align-items: center;
-
         flex-wrap: wrap;
-
         gap: 8px;
-
         padding: 8px 14px;
-
     }
 
 
     /* Monitoring / Has Current Bids */
 
     .mode-toggle {
-
         display: inline-flex;
-
         border: 1px solid #3d6ea5;
-
         border-radius: 10px;
-
         overflow: hidden;
-
     }
 
 
     .mode-pill {
-
         display: inline-flex;
-
         align-items: center;
-
         padding: 4px 12px;
-
         background-color: #ffffff;
-
         color: #08306b;
-
         font-size: 11px;
-
         font-weight: bold;
-
         cursor: pointer;
-
         white-space: nowrap;
-
         border-right: 1px solid #3d6ea5;
-
     }
 
 
     .mode-pill:last-child {
-
         border-right: none;
-
     }
 
 
     .mode-pill input {
-
         display: none;
-
     }
 
 
     .mode-pill.active {
-
         background: linear-gradient(
             #eaf4ff,
             #bcdcfa 45%,
             #7fb8ec
         );
-
     }
 
 
     .mode-pill:hover {
-
         background-color: #eaf4ff;
-
     }
 
 
     /* Search box */
 
     .toolbar-search {
-
         position: relative;
-
         flex: 1;
-
         min-width: 160px;
-
         max-width: 320px;
-
     }
 
 
     .search-symbol {
-
         position: absolute;
-
         left: 8px;
-
         top: 50%;
-
         transform: translateY(-50%);
-
         color: #777777;
-
         font-size: 15px;
-
         pointer-events: none;
-
     }
 
 
     .search-input {
-
         padding-left: 26px !important;
-
     }
 
 
     /* Inputs */
 
     .toolbar-input {
-
         font-family: Arial, Helvetica, sans-serif;
-
         font-size: 12px;
-
         font-weight: bold;
-
         color: #000000;
-
         background-color: #ffffff;
-
         border: 1px solid #777777;
-
         border-radius: 0;
-
         padding: 4px 7px;
-
         width: 100%;
-
     }
 
 
     .toolbar-select {
-
         width: auto;
-
         min-width: 140px;
-
     }
 
 
     .toolbar-input:focus {
-
         outline: none;
-
         border-color: #000000;
-
         background-color: #ffffcc;
-
     }
 
 
     /* Pill buttons */
 
     .pill-btn {
-
         display: inline-flex;
-
         align-items: center;
-
         justify-content: center;
-
         background: linear-gradient(
             #eaf4ff,
             #bcdcfa 45%,
             #7fb8ec
         );
-
         border: 1px solid #3d6ea5;
-
         border-radius: 10px;
-
         color: #08306b;
-
         font-size: 11px;
-
         font-weight: bold;
-
         text-decoration: none;
-
         white-space: nowrap;
-
         padding: 4px 14px;
-
         cursor: pointer;
-
     }
 
 
     .pill-btn:hover {
-
         background: linear-gradient(
             #dcecfb,
             #a8cdf2 45%,
             #6ba7de
         );
-
         color: #08306b;
-
     }
 
 
     .reset-pill {
-
         background: linear-gradient(
             #f5f5f5,
             #e0e0e0 45%,
             #c9c9c9
         );
-
         border: 1px solid #999999;
-
         color: #333333;
-
     }
 
 
     .reset-pill:hover {
-
         background: linear-gradient(
             #e8e8e8,
             #cfcfcf 45%,
             #b8b8b8
         );
-
         color: #222222;
-
     }
 
 
@@ -820,44 +698,31 @@
     @media (max-width: 768px) {
 
         .toolbar-title-bar {
-
             flex-direction: column;
-
             align-items: flex-start;
-
         }
 
 
         .toolbar-filter-row {
-
             flex-direction: column;
-
             align-items: stretch;
-
         }
 
 
         .toolbar-search,
         .toolbar-select,
         .mode-toggle {
-
             max-width: none;
-
             width: 100%;
-
         }
 
 
         .mode-pill {
-
             flex: 1;
-
             justify-content: center;
-
         }
 
     }
-
 
 
     /* =========================================================
@@ -866,77 +731,50 @@
 
     .monitor-table,
     .monitor-table * {
-
         font-family: Arial, Helvetica, sans-serif;
-
     }
 
 
     /* Main monitor table */
 
     .monitor-table {
-
         width: 95%;
-
         margin: 0 auto;
-
         background-color: beige;
-
         font-size: 12px;
-
         border-collapse: collapse;
-
         border: none;
-
     }
 
 
     /* Table header */
 
     .monitor-table thead th {
-
         background-color: #808080;
-
-        color: #ffffff;
-
+        color: #f3f2f2;
         font-size: 12px;
-
-        font-weight: bold;
-
+        font-weight: bolder;
         border: none;
-
         white-space: nowrap;
-
         vertical-align: middle;
-
         padding: 6px 10px;
-
     }
 
 
     /* Table cells */
 
     .monitor-table tbody td {
-
         padding: 4px 10px;
-
         border: none;
-
         vertical-align: middle;
-
         font-size: 12px;
-
         font-weight: bold;
-
         color: #000000;
-
     }
 
 
     .monitor-table tbody tr {
-
         border: none;
-
     }
 
 
@@ -945,60 +783,48 @@
        ========================================================= */
 
     .monitor-table tbody tr.developer-group-header {
-
-        background-color: #808080;
-
+        background-color: #858181;
     }
 
 
     .monitor-table tbody tr.developer-group-header td {
-
         color: #020202;
-
         font-size: 12px;
-
         font-weight: bold;
-
         padding: 5px 10px;
-
         border: none;
-
     }
 
 
-    /* Column widths */
+    /* =========================================================
+       COLUMN WIDTHS
+       ========================================================= */
 
     .col-ecgains {
-        width: 14%;
+        width: 15%;
         white-space: nowrap;
     }
 
 
     .col-agency {
-        width: 30%;
-    }
-
-
-    .col-developer {
-        width: 13%;
-        white-space: nowrap;
+        width: 35%;
     }
 
 
     .col-date {
-        width: 9%;
+        width: 10%;
         white-space: nowrap;
     }
 
 
     .col-type {
-        width: 9%;
+        width: 15%;
         white-space: nowrap;
     }
 
 
     .col-hasbid {
-        width: 7%;
+        width: 8%;
         white-space: nowrap;
     }
 
@@ -1010,169 +836,146 @@
 
 
     .col-action {
-        width: 11%;
+        width: 10%;
         white-space: nowrap;
     }
 
 
-    /* Alternating rows */
+    /* =========================================================
+       ALTERNATING ROWS
+       ========================================================= */
 
-    .monitor-table tbody tr.row-alt-a {
-
+    .monitor-table tbody tr.row-alt-a,
+    .monitor-table tbody tr.row-alt-a td {
         background-color: beige;
-
     }
 
 
-    .monitor-table tbody tr.row-alt-b {
-
+    .monitor-table tbody tr.row-alt-b,
+    .monitor-table tbody tr.row-alt-b td {
         background-color: whitesmoke;
-
     }
 
 
-    /* Priority rows */
+    /* =========================================================
+    PRIORITY ROW COLORS
+       ========================================================= */
 
-    .monitor-table tbody tr.priority-high {
+    .monitor-table tbody tr.priority-critical,
+    .monitor-table tbody tr.priority-critical td {
+        background-color: #FF0000 !important;
+        color: #000000 !important;
+    }
 
+
+    .monitor-table tbody tr.priority-high,
+    .monitor-table tbody tr.priority-high td {
         background-color: #FFA500 !important;
-
+        color: #000000 !important;
     }
 
 
-    /* Row hover */
+    /* =========================================================
+       ROW HOVER
+       ========================================================= */
 
-    .monitor-table tbody tr:hover {
-
+    .monitor-table tbody tr.row-alt-a:hover,
+    .monitor-table tbody tr.row-alt-a:hover td,
+    .monitor-table tbody tr.row-alt-b:hover,
+    .monitor-table tbody tr.row-alt-b:hover td {
         background-color: yellow !important;
-
     }
 
 
-    /* ECGAINS link */
+    /* =========================================================
+       ECGAINS LINK
+       ========================================================= */
 
     .ecgains-link {
-
-        color: #8b0000;
-
+        color: #000000;
         font-weight: bold;
-
-        text-decoration: none;
-
+        text-decoration: underline;
         white-space: nowrap;
-
     }
 
 
     .ecgains-link:hover {
-
         text-decoration: underline;
-
     }
 
 
-    /* Agency name */
+    /* =========================================================
+       AGENCY NAME
+       ========================================================= */
 
     .agency-name {
-
-        color: #8b0000;
-
-        font-weight: bold;
-
-    }
-
-
-    /* Developer name */
-
-    .developer-name {
-
         color: #000000;
-
         font-weight: bold;
-
     }
 
 
-    /* Bid URL */
+    /* =========================================================
+       BID URL
+       ========================================================= */
 
     .bid-url {
-
-        color: #000000;
-
+        color: #0011fb;
         font-weight: bold;
-
         text-decoration: underline;
-
     }
 
 
-    /* Has Bid */
+    /* =========================================================
+       HAS BID
+       ========================================================= */
 
     .has-bid {
-
         color: #000000;
-
         font-weight: bold;
-
         text-decoration: none;
-
         white-space: nowrap;
-
     }
 
 
-    /* No Bid */
+    /* =========================================================
+       NO BID
+       ========================================================= */
 
     .no-bid {
-
-        color: #555555;
-
-        font-weight: normal;
-
+        color: #000000;
+        font-weight: bold;
     }
 
 
-    /* Update pill button */
+    /* =========================================================
+       UPDATE PILL BUTTON
+       ========================================================= */
 
     .update-btn {
-
         display: inline-block;
-
         background: linear-gradient(
             #eaf4ff,
             #bcdcfa 45%,
             #7fb8ec
         );
-
         border: 1px solid #3d6ea5;
-
         border-radius: 10px;
-
         color: #08306b;
-
         font-size: 11px;
-
         font-weight: bold;
-
         text-decoration: none;
-
         white-space: nowrap;
-
         padding: 2px 14px;
-
     }
 
 
     .update-btn:hover {
-
         background: linear-gradient(
             #dcecfb,
             #a8cdf2 45%,
             #6ba7de
         );
-
         color: #08306b;
-
     }
 
 </style>

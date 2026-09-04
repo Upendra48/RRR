@@ -40,6 +40,17 @@ def monitor(request):
             developer_groups[developer_name] = []
             
         developer_groups[developer_name].append(bid)
+        
+    priority_order = {
+        "Critical": 0,
+        "High": 1,
+        "Normal": 2,
+    }    
+    
+    for developer_name in developer_groups:
+        developer_groups[developer_name].sort(
+            key=lambda bid: (priority_order.get(bid.priority, 99), -bid.id)
+        )
 
     return render(
         request,
