@@ -29,6 +29,8 @@ main {
 
 footer {
     background-color: #ffffff;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
 }
 
 .detail-label {
